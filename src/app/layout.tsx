@@ -29,6 +29,9 @@ export default function RootLayout({
                 <Link href="/how-it-works" className="hover:text-primary hover:underline">Como Funciona</Link>
                 <Link href="/how-to-protect" className="hover:text-primary hover:underline">Dicas de Segurança</Link>
             </div>
+             <p className="text-xs text-muted-foreground mb-4">
+              Análise baseada em requisições HTTP passivas. Não realizamos ataques ou varreduras invasivas.
+            </p>
             <p className="text-xs text-muted-foreground">
               Powered by{' '}
               <a

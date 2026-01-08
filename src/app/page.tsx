@@ -18,14 +18,6 @@ export default function Home() {
         <div className="mt-12">
           <UrlForm />
         </div>
-        <div className="mt-8">
-            <Link href="/how-to-protect" className="text-sm text-primary hover:underline">
-              Como identificar links falsos e se proteger
-            </Link>
-        </div>
-      </div>
-       <div className="absolute bottom-16 text-center text-sm text-muted-foreground max-w-2xl px-4">
-        Análise baseada em requisições HTTP passivas. Não realizamos ataques ou varreduras invasivas.
       </div>
     </div>
   );
