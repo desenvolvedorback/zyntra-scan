@@ -38,7 +38,6 @@ export default function RootLayout({
                 <Link href="/widget" className="hover:text-primary hover:underline">Widget</Link>
                 <Link href="/badge" className="hover:text-primary hover:underline">Badge</Link>
                 <Link href="/status" className="hover:text-primary hover:underline">Status</Link>
-                <Link href="/platform" className="hover:text-primary hover:underline">Plataforma</Link>
                 <Link href="/extension" className="hover:text-primary hover:underline">Extensão</Link>
             </div>
              <p className="text-xs text-muted-foreground mb-4">

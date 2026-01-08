@@ -33,6 +33,9 @@ export default function AboutPage() {
               <p>
                 A Zyntra é uma iniciativa de segurança digital focada em dar poder ao usuário. Nosso objetivo é fornecer ferramentas e conhecimento para que qualquer pessoa possa navegar na internet com mais confiança, identificando ameaças antes que elas se tornem um problema.
               </p>
+               <blockquote className="mt-0 border-l-4 border-primary pl-4 italic text-foreground">
+                Zyntra Scan não diz se um site é seguro. Ela mostra os sinais de risco que a maioria das pessoas não vê.
+              </blockquote>
             </CardContent>
           </Card>
 
@@ -52,9 +55,6 @@ export default function AboutPage() {
               <CardTitle className="text-2xl">Nosso compromisso</CardTitle>
             </CardHeader>
             <CardContent className="text-base space-y-4">
-               <blockquote className="mt-0 border-l-4 border-primary pl-4 italic text-foreground">
-                A Zyntra não diz o que você deve fazer. Ela mostra os riscos para você decidir.
-              </blockquote>
               <p>
                 Acreditamos que a melhor defesa é o conhecimento. Nosso compromisso é com a transparência e a educação. Nossas ferramentas são projetadas para serem passivas e seguras, analisando informações públicas sem realizar qualquer tipo de ataque, para que você tenha os dados necessários para tomar uma decisão informada.
               </p>
