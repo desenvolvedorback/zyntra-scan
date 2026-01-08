@@ -29,7 +29,6 @@ export default function RootLayout({
                 <Link href="/how-it-works" className="hover:text-primary hover:underline">Como Funciona</Link>
                 <Link href="/how-to-protect" className="hover:text-primary hover:underline">Dicas de Segurança</Link>
                 <Link href="/transparency" className="hover:text-primary hover:underline">Transparência</Link>
-                <Link href="/use-cases" className="hover:text-primary hover:underline">Casos Reais</Link>
                 <Link href="/for-who" className="hover:text-primary hover:underline">Para Quem é</Link>
                 <Link href="/contact" className="hover:text-primary hover:underline">Contato</Link>
             </div>
