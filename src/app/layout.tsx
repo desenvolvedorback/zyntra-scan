@@ -23,7 +23,12 @@ export default function RootLayout({
       <body className="font-body antialiased">
         <div className="flex flex-col min-h-screen">
           <main className="flex-grow">{children}</main>
-          <footer className="w-full text-center p-4 bg-background">
+          <footer className="w-full text-center p-6 bg-background border-t border-border/50">
+            <div className="flex justify-center items-center gap-4 text-xs text-muted-foreground mb-4">
+                <Link href="/about" className="hover:text-primary hover:underline">Sobre</Link>
+                <Link href="/how-it-works" className="hover:text-primary hover:underline">Como Funciona</Link>
+                <Link href="/how-to-protect" className="hover:text-primary hover:underline">Dicas de Segurança</Link>
+            </div>
             <p className="text-xs text-muted-foreground">
               Powered by{' '}
               <a
