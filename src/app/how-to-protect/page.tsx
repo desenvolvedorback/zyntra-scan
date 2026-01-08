@@ -56,7 +56,7 @@ export default function HowToProtectPage() {
                 <ol className="space-y-6 list-decimal list-inside">
                     <li>
                         <div>
-                            <h3 className="font-semibold text-lg text-primary-foreground mb-1">Verifique o Domínio com Atenção</h3>
+                            <h3 className="font-semibold text-lg mb-1">Verifique o Domínio com Atenção</h3>
                             <p>
                             Sempre olhe para o endereço do site antes de clicar. Golpistas registram domínios parecidos com os originais, trocando letras ou adicionando palavras.
                             </p>
@@ -76,7 +76,7 @@ export default function HowToProtectPage() {
 
                     <li>
                        <div>
-                            <h3 className="font-semibold text-lg text-primary-foreground mb-1">Desconfie de Ofertas Urgentes e Exageradas</h3>
+                            <h3 className="font-semibold text-lg mb-1">Desconfie de Ofertas Urgentes e Exageradas</h3>
                             <p>
                             "Sua conta será bloqueada!", "Você ganhou um prêmio incrível!", "Clique aqui para resgatar seu PIX!". Mensagens com senso de urgência ou promessas boas demais para ser verdade são táticas comuns para fazer você agir sem pensar.
                             </p>
@@ -85,7 +85,7 @@ export default function HowToProtectPage() {
 
                     <li>
                         <div>
-                            <h3 className="font-semibold text-lg text-primary-foreground mb-1">Cuidado com Encurtadores de URL</h3>
+                            <h3 className="font-semibold text-lg mb-1">Cuidado com Encurtadores de URL</h3>
                             <p>
                             Links encurtados (como bit.ly, t.co) escondem o endereço final. Antes de clicar, use um expansor de URL ou o nosso scanner para ver para onde o link realmente leva.
                             </p>
@@ -94,7 +94,7 @@ export default function HowToProtectPage() {
                     
                     <li>
                         <div>
-                            <h3 className="font-semibold text-lg text-primary-foreground mb-1">Use o Zyntra Scan</h3>
+                            <h3 className="font-semibold text-lg mb-1">Use o Zyntra Scan</h3>
                             <p>
                             Na dúvida, sempre use nossa ferramenta. Ela foi projetada para pegar os sinais que a maioria das pessoas não vê, combinando análise técnica com análise de padrões suspeitos.
                             </p>
