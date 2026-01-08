@@ -55,42 +55,50 @@ export default function HowToProtectPage() {
             <CardContent className="text-base">
                 <ol className="space-y-6 list-decimal list-inside">
                     <li>
-                        <h3 className="inline font-semibold text-lg text-primary-foreground">Verifique o Domínio com Atenção</h3>
-                        <p className="mt-1">
-                        Sempre olhe para o endereço do site antes de clicar. Golpistas registram domínios parecidos com os originais, trocando letras ou adicionando palavras.
-                        </p>
-                        <div className="mt-4 space-y-3">
-                        <div className="bg-destructive/10 border border-destructive/30 text-destructive-foreground p-3 rounded-lg font-mono text-center text-sm">
-                            ❌ banco-itau<span className="bg-destructive/30 px-1 rounded">.xyz</span>
-                        </div>
-                        <div className="bg-destructive/10 border border-destructive/30 text-destructive-foreground p-3 rounded-lg font-mono text-center text-sm">
-                            ❌ faceb<span className="bg-destructive/30 px-1 rounded">oo</span>ok.com
-                        </div>
-                        <div className="bg-destructive/10 border border-destructive/30 text-destructive-foreground p-3 rounded-lg font-mono text-center text-sm">
-                            ❌ apple.com<span className="bg-destructive/30 px-1 rounded">.seguranca.info</span>
-                        </div>
+                        <div>
+                            <h3 className="inline font-semibold text-lg text-primary-foreground">Verifique o Domínio com Atenção</h3>
+                            <p className="mt-1">
+                            Sempre olhe para o endereço do site antes de clicar. Golpistas registram domínios parecidos com os originais, trocando letras ou adicionando palavras.
+                            </p>
+                            <div className="mt-4 space-y-3">
+                            <div className="bg-destructive/10 border border-destructive/30 text-destructive-foreground p-3 rounded-lg font-mono text-center text-sm">
+                                ❌ banco-itau<span className="bg-destructive/30 px-1 rounded">.xyz</span>
+                            </div>
+                            <div className="bg-destructive/10 border border-destructive/30 text-destructive-foreground p-3 rounded-lg font-mono text-center text-sm">
+                                ❌ faceb<span className="bg-destructive/30 px-1 rounded">oo</span>ok.com
+                            </div>
+                            <div className="bg-destructive/10 border border-destructive/30 text-destructive-foreground p-3 rounded-lg font-mono text-center text-sm">
+                                ❌ apple.com<span className="bg-destructive/30 px-1 rounded">.seguranca.info</span>
+                            </div>
+                            </div>
                         </div>
                     </li>
 
                     <li>
-                        <h3 className="inline font-semibold text-lg text-primary-foreground">Desconfie de Ofertas Urgentes e Exageradas</h3>
-                        <p className="mt-1">
-                        "Sua conta será bloqueada!", "Você ganhou um prêmio incrível!", "Clique aqui para resgatar seu PIX!". Mensagens com senso de urgência ou promessas boas demais para ser verdade são táticas comuns para fazer você agir sem pensar.
-                        </p>
+                       <div>
+                            <h3 className="inline font-semibold text-lg text-primary-foreground">Desconfie de Ofertas Urgentes e Exageradas</h3>
+                            <p className="mt-1">
+                            "Sua conta será bloqueada!", "Você ganhou um prêmio incrível!", "Clique aqui para resgatar seu PIX!". Mensagens com senso de urgência ou promessas boas demais para ser verdade são táticas comuns para fazer você agir sem pensar.
+                            </p>
+                       </div>
                     </li>
 
                     <li>
-                        <h3 className="inline font-semibold text-lg text-primary-foreground">Cuidado com Encurtadores de URL</h3>
-                        <p className="mt-1">
-                        Links encurtados (como bit.ly, t.co) escondem o endereço final. Antes de clicar, use um expansor de URL ou o nosso scanner para ver para onde o link realmente leva.
-                        </p>
+                        <div>
+                            <h3 className="inline font-semibold text-lg text-primary-foreground">Cuidado com Encurtadores de URL</h3>
+                            <p className="mt-1">
+                            Links encurtados (como bit.ly, t.co) escondem o endereço final. Antes de clicar, use um expansor de URL ou o nosso scanner para ver para onde o link realmente leva.
+                            </p>
+                        </div>
                     </li>
                     
                     <li>
-                        <h3 className="inline font-semibold text-lg text-primary-foreground">Use o Zyntra Scan</h3>
-                        <p className="mt-1">
-                        Na dúvida, sempre use nossa ferramenta. Ela foi projetada para pegar os sinais que a maioria das pessoas não vê, combinando análise técnica com análise de padrões suspeitos.
-                        </p>
+                        <div>
+                            <h3 className="inline font-semibold text-lg text-primary-foreground">Use o Zyntra Scan</h3>
+                            <p className="mt-1">
+                            Na dúvida, sempre use nossa ferramenta. Ela foi projetada para pegar os sinais que a maioria das pessoas não vê, combinando análise técnica com análise de padrões suspeitos.
+                            </p>
+                        </div>
                     </li>
                 </ol>
             </CardContent>
