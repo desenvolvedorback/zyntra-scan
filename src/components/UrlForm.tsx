@@ -61,7 +61,7 @@ export function UrlForm() {
         ) : (
             <Search className="h-5 w-5" />
         )}
-        <span className="ml-2 hidden sm:inline">{isLoading ? 'Analisando...' : 'Analisar'}</span>
+        <span className="ml-2 hidden sm:inline">{isLoading ? 'Analisando...' : 'Verificar Link'}</span>
       </Button>
     </form>
   );

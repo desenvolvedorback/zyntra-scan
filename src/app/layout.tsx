@@ -25,11 +25,11 @@ export default function RootLayout({
           <main className="flex-grow">{children}</main>
           <footer className="w-full text-center p-6 bg-background border-t border-border/50">
             <div className="flex justify-center items-center gap-4 text-xs text-muted-foreground mb-4 flex-wrap">
-                <Link href="/about" className="hover:text-primary hover:underline">Sobre</Link>
                 <Link href="/how-it-works" className="hover:text-primary hover:underline">Como Funciona</Link>
-                <Link href="/how-to-protect" className="hover:text-primary hover:underline">Dicas de Segurança</Link>
                 <Link href="/transparency" className="hover:text-primary hover:underline">Transparência</Link>
+                <Link href="/how-to-protect" className="hover:text-primary hover:underline">Dicas de Segurança</Link>
                 <Link href="/for-who" className="hover:text-primary hover:underline">Para Quem é</Link>
+                <Link href="/about" className="hover:text-primary hover:underline">Sobre</Link>
                 <Link href="/contact" className="hover:text-primary hover:underline">Contato</Link>
             </div>
              <p className="text-xs text-muted-foreground mb-4">
@@ -45,6 +45,7 @@ export default function RootLayout({
               >
                 Zyntra
               </a>
+              {' '}— Segurança Digital Passiva
             </p>
           </footer>
         </div>
