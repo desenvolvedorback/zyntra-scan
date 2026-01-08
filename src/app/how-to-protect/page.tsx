@@ -16,10 +16,14 @@ export default function HowToProtectPage() {
           </Button>
         </div>
         <article className="prose prose-invert max-w-none text-foreground">
-          <h1 className="text-4xl font-bold text-primary mb-4">Como se Proteger de Links Falsos e Golpes Online</h1>
+          <h1 className="text-4xl font-bold text-primary mb-4">Como identificar links falsos e se proteger de golpes online</h1>
           <p className="text-lg text-muted-foreground">
             A internet está cheia de armadilhas, mas com um pouco de conhecimento, você pode navegar com muito mais segurança. Use nosso scanner e siga estas dicas para se proteger.
           </p>
+
+          <blockquote className="mt-6 border-l-4 border-primary pl-4 italic text-foreground">
+            A maioria dos golpes modernos passa despercebida porque não depende mais de falhas técnicas, mas de engenharia social.
+          </blockquote>
 
           <Card className="mt-8">
             <CardHeader>
@@ -54,11 +58,17 @@ export default function HowToProtectPage() {
                 <p>
                   Sempre olhe para o endereço do site antes de clicar. Golpistas registram domínios parecidos com os originais, trocando letras ou adicionando palavras.
                 </p>
-                <ul className="list-disc pl-5 space-y-2 mt-2 bg-muted/30 p-4 rounded-md">
-                  <li><span className="font-mono bg-destructive/20 text-red-400 px-1 rounded">banco-itau.<strong>xyz</strong></span> em vez de <span className="font-mono bg-green-900/80 text-green-400 px-1 rounded">itau.<strong>com.br</strong></span></li>
-                  <li><span className="font-mono bg-destructive/20 text-red-400 px-1 rounded">faceboook.com</span> (com um 'o' a mais)</li>
-                  <li><span className="font-mono bg-destructive/20 text-red-400 px-1 rounded">apple.com.<strong>seguranca.info</strong></span> (o domínio real é <strong className="text-red-400">seguranca.info</strong>, não apple.com)</li>
-                </ul>
+                <div className="mt-4 space-y-3">
+                  <div className="bg-destructive/10 border border-destructive/30 text-destructive-foreground p-3 rounded-lg font-mono text-center text-sm">
+                    ❌ banco-itau<span className="bg-destructive/30 px-1 rounded">.xyz</span>
+                  </div>
+                  <div className="bg-destructive/10 border border-destructive/30 text-destructive-foreground p-3 rounded-lg font-mono text-center text-sm">
+                    ❌ faceb<span className="bg-destructive/30 px-1 rounded">oo</span>ok.com
+                  </div>
+                  <div className="bg-destructive/10 border border-destructive/30 text-destructive-foreground p-3 rounded-lg font-mono text-center text-sm">
+                    ❌ apple.com<span className="bg-destructive/30 px-1 rounded">.seguranca.info</span>
+                  </div>
+                </div>
               </div>
 
               <div>
@@ -83,6 +93,10 @@ export default function HowToProtectPage() {
               </div>
             </CardContent>
           </Card>
+          
+          <div className="mt-12 text-center">
+            <p className="text-2xl font-bold text-primary">Na dúvida, não clique. Analise.</p>
+          </div>
         </article>
       </div>
     </div>
