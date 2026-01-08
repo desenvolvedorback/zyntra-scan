@@ -36,6 +36,9 @@ export default function TermsPage() {
               <blockquote className="mt-0 border-l-4 border-primary pl-4 italic text-foreground">
                 Nossos relatórios não são um veredito final de "seguro" ou "perigoso", mas um termômetro de risco para que você tome uma decisão mais informada. A responsabilidade final sobre onde clicar é sua.
               </blockquote>
+               <p className="text-sm text-muted-foreground">
+                A Zyntra não se responsabiliza por perdas financeiras, danos ou consequências decorrentes do uso ou da interpretação dos relatórios.
+              </p>
             </CardContent>
           </Card>
 
@@ -54,7 +57,7 @@ export default function TermsPage() {
                 O uso comercial ou de alto volume requer um acordo prévio. O abuso do serviço, como automação excessiva, pode levar ao bloqueio temporário ou permanente do acesso.
               </p>
                <p className="font-semibold">
-                Ao usar o widget da Zyntra, você concorda em exibir o selo "Powered by Zyntra Scan" de forma visível, vinculando-o de volta à nossa página inicial.
+                Para o uso gratuito do widget, a exibição do selo "Powered by Zyntra Scan" é obrigatória e deve ser mantida como fornecida. Em integrações comerciais, o uso do badge pode ser ajustado mediante acordo.
               </p>
             </CardContent>
           </Card>
