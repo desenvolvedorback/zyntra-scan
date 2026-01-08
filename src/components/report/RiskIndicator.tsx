@@ -25,9 +25,9 @@ const riskConfig = {
 export function RiskIndicator({ risk, size = 'sm' }: RiskIndicatorProps) {
   const config = riskConfig[risk];
   return (
-    <div className="flex items-center gap-2">
-      <div className={cn('rounded-full', config.color, size === 'sm' ? 'w-2.5 h-2.5' : 'w-3 h-3')} />
-      <span className={cn('font-semibold', config.text, size === 'sm' ? 'text-sm' : 'text-lg')}>
+    <div className="flex items-center gap-3">
+      <div className={cn('rounded-full', config.color, size === 'sm' ? 'w-3 h-3' : 'w-4 h-4')} />
+      <span className={cn('font-semibold', config.text, size === 'sm' ? 'text-base' : 'text-xl')}>
         Risco {risk}
       </span>
     </div>

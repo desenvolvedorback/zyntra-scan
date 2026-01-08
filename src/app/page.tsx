@@ -18,8 +18,8 @@ export default function Home() {
           <UrlForm />
         </div>
       </div>
-       <footer className="absolute bottom-4 text-center text-sm text-muted-foreground">
-        Serviço público e experimental. Use por sua conta e risco.
+       <footer className="absolute bottom-4 text-center text-sm text-muted-foreground max-w-2xl px-4">
+        Análise baseada em requisições HTTP passivas. Não realizamos ataques ou varreduras invasivas.
       </footer>
     </main>
   );

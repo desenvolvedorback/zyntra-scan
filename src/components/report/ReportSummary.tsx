@@ -9,6 +9,12 @@ interface ReportSummaryProps {
   siteStatus: number | null;
 }
 
+const riskDescription = {
+    'Baixo': "Este site apresenta baixo risco com base em verificações técnicas básicas.",
+    'Médio': "Este site apresenta risco moderado. Prossiga com cautela.",
+    'Alto': "Este site apresenta alto risco. É recomendado não prosseguir."
+}
+
 export function ReportSummary({ url, risk, siteStatus }: ReportSummaryProps) {
   const getStatusMessage = () => {
     if (siteStatus === null) {
@@ -41,9 +47,10 @@ export function ReportSummary({ url, risk, siteStatus }: ReportSummaryProps) {
           <Globe className="h-6 w-6 text-primary shrink-0" />
           <p className="font-mono text-lg break-all">{url}</p>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="flex items-center gap-3 p-4 bg-muted/50 rounded-lg">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="flex flex-col justify-center gap-2 p-4 bg-muted/50 rounded-lg">
              <RiskIndicator risk={risk} size="lg" />
+             <p className="text-sm text-muted-foreground">{riskDescription[risk]}</p>
           </div>
           <div className="flex items-center gap-3 p-4 bg-muted/50 rounded-lg">
             <Server className={cn("h-6 w-6 shrink-0", status.color)} />
