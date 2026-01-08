@@ -10,9 +10,9 @@ interface ReportSummaryProps {
 }
 
 const riskDescription = {
-    'Baixo': "Este site apresenta baixo risco com base em verificações técnicas básicas.",
-    'Médio': "Este site apresenta risco moderado. Prossiga com cautela.",
-    'Alto': "Este site apresenta alto risco. É recomendado não prosseguir."
+    'Baixo': "Este site apresenta baixo risco com base em verificações técnicas e heurísticas.",
+    'Médio': "Este site apresenta risco moderado. Prossiga com cautela e verifique a fonte.",
+    'Alto': "Este site apresenta alto risco. É altamente recomendado não prosseguir ou fornecer informações."
 }
 
 export function ReportSummary({ url, risk, siteStatus }: ReportSummaryProps) {

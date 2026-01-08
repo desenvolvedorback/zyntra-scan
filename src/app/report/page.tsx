@@ -32,7 +32,7 @@ async function ReportGenerator({ url }: { url: string }) {
     validationError = "A URL fornecida é inválida.";
     // Provide dummy data for children components to prevent crashing
     siteAnalysisResult = { status: null, responseTime: null, isHttps: false, isSslValid: null, securityHeaders: { csp: false, xfo: false, xcto: false }, redirected: false, finalUrl: '', error: validationError };
-    linkAnalysisResult = { risk: 'Alto', reasons: [validationError] };
+    linkAnalysisResult = { risk: 'Alto', score: 10, reasons: [validationError] };
   }
   
   if (validationError) {

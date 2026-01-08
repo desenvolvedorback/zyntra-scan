@@ -15,10 +15,13 @@ export type SiteAnalysisResult = {
 
 export type LinkAnalysisResult = {
   risk: 'Baixo' | 'Médio' | 'Alto';
+  score: number;
   reasons: string[];
 };
 
-const SUSPICIOUS_KEYWORDS = ['pix', 'resgatar', 'confirmar', 'login', 'senha', 'banco', 'credencial', 'gratis', 'premio', 'urgente'];
+const SUSPICIOUS_TLDS = ['.site', '.xyz', '.online', '.top', '.click', '.shop'];
+const PAID_TRAFFIC_PARAMS = ['utm_', 'ttclid', 'fbclid', 'adid', 'adset', 'placement', 'campaign'];
+const SUSPICIOUS_PATH_KEYWORDS = ['/of/', '/back/', '/promo/', '/confirmar/', '/pix/', '/resgatar/', '/ganhe/'];
 const SHORTENER_DOMAINS = ['bit.ly', 't.co', 'goo.gl', 'tinyurl.com', 'is.gd', 'buff.ly', 'adf.ly', 'ow.ly'];
 
 export async function analyzeSite(url: string): Promise<SiteAnalysisResult> {
@@ -84,59 +87,85 @@ export function analyzeLink(url: string, siteAnalysis: SiteAnalysisResult): Link
   try {
     urlObj = new URL(url);
   } catch {
-    return { risk: 'Alto', reasons: ['URL com formato inválido.']};
+    return { risk: 'Alto', score: 10, reasons: ['URL com formato inválido.']};
   }
 
   const reasons: string[] = [];
   let score = 0;
 
-  // Check for direct IP usage
-  if (/^(\d{1,3}\.){3}\d{1,3}$/.test(urlObj.hostname)) {
-    reasons.push("Uso de endereço IP direto em vez de um domínio.");
-    score += 3;
-  }
-
-  // Check for missing HTTPS
-  if (!siteAnalysis.isHttps) {
-    reasons.push("Conexão não segura (HTTP). Informações podem ser interceptadas.");
+  // 1. TLD check
+  if (SUSPICIOUS_TLDS.some(tld => urlObj.hostname.endsWith(tld))) {
+    reasons.push("Uso de um domínio genérico (.site, .xyz, etc.) que é frequentemente abusado.");
     score += 2;
   }
 
-  // Check for invalid SSL cert from site analysis
-  if (siteAnalysis.isSslValid === false) {
-    reasons.push("O certificado SSL do site é inválido, o que é um grande sinal de alerta.");
-    score += 4;
+  // 2. URL Length
+  if (url.length > 200) {
+    reasons.push("A URL é excessivamente longa, o que pode ser uma tática para ofuscar o link real.");
+    score += 2;
+  }
+
+  // 3. Paid traffic params
+  if (PAID_TRAFFIC_PARAMS.some(param => urlObj.search.includes(param))) {
+    reasons.push("Presença de parâmetros de rastreamento de anúncios, comum em campanhas de phishing.");
+    score += 2;
   }
   
-  // Check for shortened URL
-  if (SHORTENER_DOMAINS.some(domain => urlObj.hostname.includes(domain))) {
-    reasons.push("URL encurtada, o que pode mascarar o destino real do link.");
-    score += 2;
+  // 4. Missing Security Headers from siteAnalysis
+  if (!siteAnalysis.securityHeaders.xfo) {
+    reasons.push("Ausência do cabeçalho X-Frame-Options, aumentando o risco de ataques de clickjacking.");
+    score += 1;
+  }
+  if (!siteAnalysis.securityHeaders.xcto) {
+    reasons.push("Ausência do cabeçalho X-Content-Type-Options, o que pode permitir ataques de 'MIME sniffing'.");
+    score += 1;
   }
 
-  // Check for suspicious keywords
+  // 5. Suspicious path keywords
   const pathAndQuery = (urlObj.pathname + urlObj.search).toLowerCase();
-  const foundKeywords = SUSPICIOUS_KEYWORDS.filter(keyword => pathAndQuery.includes(keyword));
+  const foundKeywords = SUSPICIOUS_PATH_KEYWORDS.filter(keyword => pathAndQuery.includes(keyword));
   if (foundKeywords.length > 0) {
-    reasons.push(`Contém palavras suspeitas: ${foundKeywords.join(', ')}.`);
-    score += foundKeywords.length;
+    reasons.push(`Contém palavras suspeitas no caminho da URL: ${foundKeywords.map(k=>k.replace(/\//g, '')).join(', ')}.`);
+    score += 1;
   }
   
-  // Check for redirects from site analysis
+  // Previous checks
   if (siteAnalysis.redirected) {
       reasons.push("O site redireciona para outra URL, o que pode ser usado para ofuscação.");
       score += 1;
   }
 
+  if (!siteAnalysis.isHttps) {
+    reasons.push("Conexão não segura (HTTP). Informações podem ser interceptadas.");
+    score += 2;
+  }
+
+  if (siteAnalysis.isSslValid === false) {
+    reasons.push("O certificado SSL do site é inválido, o que é um grande sinal de alerta.");
+    score += 4;
+  }
+  
+  if (/^(\d{1,3}\.){3}\d{1,3}$/.test(urlObj.hostname)) {
+    reasons.push("Uso de endereço IP direto em vez de um domínio, dificultando a identificação da fonte.");
+    score += 3;
+  }
+
+  if (SHORTENER_DOMAINS.some(domain => urlObj.hostname.includes(domain))) {
+    reasons.push("URL encurtada, o que pode mascarar o destino real do link.");
+    score += 2;
+  }
+
   let risk: 'Baixo' | 'Médio' | 'Alto';
-  if (score === 0) {
+  if (score <= 2) {
       risk = 'Baixo';
-      reasons.push("Nenhum indicador de risco óbvio encontrado.");
-  } else if (score <= 3) {
+      if (reasons.length === 0) {
+        reasons.push("Nenhum indicador de risco óbvio encontrado na análise heurística.");
+      }
+  } else if (score <= 5) {
       risk = 'Médio';
   } else {
       risk = 'Alto';
   }
 
-  return { risk, reasons };
+  return { risk, score, reasons };
 }
