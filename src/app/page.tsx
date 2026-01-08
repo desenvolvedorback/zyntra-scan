@@ -10,15 +10,12 @@ export default function Home() {
           <Logo />
         </div>
         <h1 className="text-4xl md:text-5xl font-bold text-primary font-headline">
-          Zyntra Scan
+          Descubra riscos ocultos em sites e links antes de clicar.
         </h1>
         <p className="mt-4 text-lg text-foreground/80">
-          Descubra riscos ocultos em sites e links antes de clicar.
-        </p>
-        <p className="mt-2 text-sm text-muted-foreground">
           Análise técnica e heurística baseada em requisições HTTP passivas — sem downloads, sem invasão.
         </p>
-        <p className="mt-2 text-xs text-muted-foreground">
+        <p className="mt-2 text-sm text-muted-foreground">
           Pontuação de risco baseada em padrões reais usados em campanhas de phishing e golpes online.
         </p>
         <div className="mt-12">
@@ -27,15 +24,15 @@ export default function Home() {
         <div className="mt-8 flex flex-col sm:flex-row justify-center items-center gap-x-6 gap-y-2 text-xs text-muted-foreground">
             <div className="flex items-center gap-2">
                 <Lock className="w-3 h-3" />
-                <span>Nenhum dado é armazenado</span>
+                <span>Nenhum dado do usuário é armazenado</span>
             </div>
             <div className="flex items-center gap-2">
                 <Globe className="w-3 h-3" />
-                <span>Análise de informações públicas</span>
+                <span>Apenas informações públicas são analisadas</span>
             </div>
             <div className="flex items-center gap-2">
                 <ShieldOff className="w-3 h-3" />
-                <span>Não acessamos logins</span>
+                <span>Não acessamos contas, logins ou áreas restritas</span>
             </div>
         </div>
       </div>

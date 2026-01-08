@@ -9,6 +9,7 @@ import { SiteAnalysisCard } from '@/components/report/SiteAnalysisCard';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { ShareButton } from '@/components/report/ShareButton';
 
 export const metadata: Metadata = {
   title: 'Relatório de Análise - Zyntra Scan',
@@ -47,19 +48,33 @@ async function ReportGenerator({ url }: { url: string }) {
         </Card>
       )
   }
+  
+  const reportData = {
+    url,
+    risk: linkAnalysisResult.risk,
+    score: linkAnalysisResult.score,
+    reasons: linkAnalysisResult.reasons,
+    siteAnalysis: siteAnalysisResult,
+  };
+
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <div className="lg:col-span-3">
-        <ReportSummary url={url} risk={linkAnalysisResult.risk} siteStatus={siteAnalysisResult.status} />
+    <>
+      <div className="lg:col-span-3 mb-6">
+        <ShareButton reportData={reportData} />
       </div>
-      <div className="lg:col-span-1">
-        <LinkAnalysisCard result={linkAnalysisResult} />
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-3">
+          <ReportSummary url={url} risk={linkAnalysisResult.risk} siteStatus={siteAnalysisResult.status} />
+        </div>
+        <div className="lg:col-span-1">
+          <LinkAnalysisCard result={linkAnalysisResult} />
+        </div>
+        <div className="lg:col-span-2">
+          <SiteAnalysisCard result={siteAnalysisResult} />
+        </div>
       </div>
-      <div className="lg:col-span-2">
-        <SiteAnalysisCard result={siteAnalysisResult} />
-      </div>
-    </div>
+    </>
   );
 }
 
