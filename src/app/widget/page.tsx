@@ -7,7 +7,7 @@ import { ZyntraWidget } from '@/components/ZyntraWidget';
 
 export default function WidgetPage() {
   const widgetCode = `<div id="zyntra-widget-container"></div>
-<script src="https://zyntra-scan-ai.web.app/widget.js" defer></script>`;
+<script src="https://zyntra-scan.onrender.com/widget.js" defer></script>`;
 
   return (
     <div className="min-h-screen bg-background p-4 sm:p-6 md:p-8">

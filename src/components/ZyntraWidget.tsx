@@ -20,7 +20,7 @@ export function ZyntraWidget() {
 
     try {
       new URL(formattedUrl);
-      const reportUrl = `https://zyntra-scan-ai.web.app/report?url=${encodeURIComponent(formattedUrl)}`;
+      const reportUrl = `https://zyntra-scan.onrender.com/report?url=${encodeURIComponent(formattedUrl)}`;
       window.open(reportUrl, '_blank');
       setError('');
       setUrl('');

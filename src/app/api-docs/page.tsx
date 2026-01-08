@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 
 export default function ApiDocsPage() {
-  const exampleRequest = `fetch('https://zyntra-scan-ai.web.app/api/scan?url=exemplo.com')
+  const exampleRequest = `fetch('https://zyntra-scan.onrender.com/api/scan?url=exemplo.com')
   .then(res => res.json())
   .then(data => console.log(data));`;
 
