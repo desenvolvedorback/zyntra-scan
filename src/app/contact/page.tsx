@@ -34,7 +34,7 @@ export default function ContactPage() {
                   Para parcerias, sugestões ou questões gerais sobre o projeto Zyntra, entre em contato conosco pelo e-mail abaixo.
                 </p>
                 <Button asChild>
-                  <a href="mailto:contact@zyntra.com">contact@zyntra.com</a>
+                  <a href="mailto:suporte.zyntra.tec@gmail.com">suporte.zyntra.tec@gmail.com</a>
                 </Button>
               </CardContent>
             </Card>
