@@ -38,7 +38,7 @@ export default function StatusPage() {
           <Card className="mt-12">
             <CardHeader>
               <CardTitle>Status Atual dos Serviços</CardTitle>
-              <CardDescription>Última verificação: {new Date().toLocaleString('pt-BR')}</CardDescription>
+              <CardDescription>Última verificação: {new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               {services.map((service) => {
