@@ -1,6 +1,6 @@
 import { UrlForm } from '@/components/UrlForm';
 import { Logo } from '@/components/Logo';
-import { Lock, Settings, Shield } from 'lucide-react';
+import { Lock, Globe, ShieldOff } from 'lucide-react';
 
 export default function Home() {
   return (
@@ -27,11 +27,11 @@ export default function Home() {
                 <span>Nenhum dado é armazenado</span>
             </div>
             <div className="flex items-center gap-2">
-                <Settings className="w-3 h-3" />
+                <Globe className="w-3 h-3" />
                 <span>Análise de informações públicas</span>
             </div>
             <div className="flex items-center gap-2">
-                <Shield className="w-3 h-3" />
+                <ShieldOff className="w-3 h-3" />
                 <span>Não acessamos logins</span>
             </div>
         </div>
