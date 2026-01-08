@@ -33,6 +33,7 @@ export default function RootLayout({
                 <Link href="/about" className="hover:text-primary hover:underline">Sobre</Link>
                 <Link href="/contact" className="hover:text-primary hover:underline">Contato</Link>
                 <Link href="/api-docs" className="hover:text-primary hover:underline">API</Link>
+                <Link href="/widget" className="hover:text-primary hover:underline">Widget</Link>
             </div>
              <p className="text-xs text-muted-foreground mb-4">
               Análise baseada em requisições HTTP passivas. Não realizamos ataques ou varreduras invasivas.
