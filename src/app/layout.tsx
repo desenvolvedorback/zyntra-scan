@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 
@@ -20,7 +21,22 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body antialiased">
-        {children}
+        <div className="flex flex-col min-h-screen">
+          <main className="flex-grow">{children}</main>
+          <footer className="w-full text-center p-4 bg-background">
+            <p className="text-xs text-muted-foreground">
+              Powered by{' '}
+              <a
+                href="https://zyntra-zy.netlify.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold text-primary hover:underline"
+              >
+                Zyntra
+              </a>
+            </p>
+          </footer>
+        </div>
         <Toaster />
       </body>
     </html>

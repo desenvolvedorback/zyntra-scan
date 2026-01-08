@@ -9,10 +9,19 @@ interface ReportSummaryProps {
   siteStatus: number | null;
 }
 
-const riskDescription = {
-    'Baixo': "Este site apresenta baixo risco com base em verificações técnicas e heurísticas.",
-    'Médio': "Este site apresenta risco moderado. Prossiga com cautela e verifique a fonte.",
-    'Alto': "Este site apresenta alto risco. É altamente recomendado não prosseguir ou fornecer informações."
+const riskContent = {
+    'Baixo': {
+        description: "Este site apresenta baixo risco com base em verificações técnicas e heurísticas.",
+        className: 'bg-green-500/10'
+    },
+    'Médio': {
+        description: "Este site apresenta risco moderado. Prossiga com cautela e verifique a fonte.",
+        className: 'bg-yellow-500/10'
+    },
+    'Alto': {
+        description: "Este site apresenta alto risco. É altamente recomendado não prosseguir ou fornecer informações.",
+        className: 'bg-red-500/10'
+    }
 }
 
 export function ReportSummary({ url, risk, siteStatus }: ReportSummaryProps) {
@@ -36,6 +45,7 @@ export function ReportSummary({ url, risk, siteStatus }: ReportSummaryProps) {
   };
 
   const status = getStatusMessage();
+  const content = riskContent[risk];
 
   return (
     <Card>
@@ -48,9 +58,14 @@ export function ReportSummary({ url, risk, siteStatus }: ReportSummaryProps) {
           <p className="font-mono text-lg break-all">{url}</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="flex flex-col justify-center gap-2 p-4 bg-muted/50 rounded-lg">
+          <div className={cn("flex flex-col justify-center gap-2 p-4 rounded-lg", content.className)}>
              <RiskIndicator risk={risk} size="lg" />
-             <p className="text-sm text-muted-foreground">{riskDescription[risk]}</p>
+             <p className="text-sm text-foreground/80">{content.description}</p>
+             {risk === 'Alto' && (
+                <p className="text-xs text-foreground/60 mt-2">
+                    Sites de phishing modernos podem usar HTTPS e certificados válidos. Esta análise considera também padrões comportamentais comuns em golpes.
+                </p>
+             )}
           </div>
           <div className="flex items-center gap-3 p-4 bg-muted/50 rounded-lg">
             <Server className={cn("h-6 w-6 shrink-0", status.color)} />
