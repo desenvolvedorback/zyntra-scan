@@ -45,23 +45,23 @@ export function UrlForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex w-full items-center space-x-2">
+    <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row w-full items-center space-y-2 sm:space-y-0 sm:space-x-2">
       <Input
         type="url"
         placeholder="exemplo.com"
         value={url}
         onChange={(e) => setUrl(e.target.value)}
-        className="text-lg p-6"
+        className="text-base p-4 sm:p-6 sm:text-lg"
         disabled={isLoading}
         aria-label="URL a ser analisada"
       />
-      <Button type="submit" size="lg" className="p-6" disabled={isLoading}>
+      <Button type="submit" size="lg" className="p-6 w-full sm:w-auto" disabled={isLoading}>
         {isLoading ? (
             <span className="animate-spin h-5 w-5 border-2 border-primary-foreground/50 border-t-primary-foreground rounded-full" />
         ) : (
             <Search className="h-5 w-5" />
         )}
-        <span className="ml-2 hidden sm:inline">{isLoading ? 'Analisando...' : 'Verificar Link'}</span>
+        <span className="ml-2">{isLoading ? 'Analisando...' : 'Verificar Link'}</span>
       </Button>
     </form>
   );

@@ -53,9 +53,9 @@ export function ReportSummary({ url, risk, siteStatus }: ReportSummaryProps) {
         <CardTitle className="text-2xl">Resumo da Análise</CardTitle>
       </CardHeader>
       <CardContent className="grid gap-6">
-        <div className="flex items-center gap-4 bg-muted/50 p-4 rounded-lg">
-          <Globe className="h-6 w-6 text-primary shrink-0" />
-          <p className="font-mono text-lg break-all">{url}</p>
+        <div className="flex items-start sm:items-center gap-4 bg-muted/50 p-4 rounded-lg">
+          <Globe className="h-6 w-6 text-primary shrink-0 mt-1 sm:mt-0" />
+          <p className="font-mono text-base sm:text-lg break-all">{url}</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className={cn("flex flex-col justify-center gap-2 p-4 rounded-lg", content.className)}>
@@ -69,7 +69,7 @@ export function ReportSummary({ url, risk, siteStatus }: ReportSummaryProps) {
           </div>
           <div className="flex items-center gap-3 p-4 bg-muted/50 rounded-lg">
             <Server className={cn("h-6 w-6 shrink-0", status.color)} />
-            <span className={cn("font-semibold text-lg", status.color)}>{status.message}</span>
+            <span className={cn("font-semibold text-base sm:text-lg", status.color)}>{status.message}</span>
           </div>
         </div>
       </CardContent>

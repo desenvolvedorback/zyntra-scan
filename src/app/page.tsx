@@ -6,17 +6,20 @@ import Link from 'next/link';
 
 export default function Home() {
   return (
-    <div className="flex flex-col items-center justify-center p-8 bg-background flex-grow">
+    <div className="flex flex-col items-center justify-center p-4 sm:p-8 bg-background flex-grow">
       <div className="w-full max-w-3xl text-center">
         <div className="mx-auto mb-8 w-fit">
           <Logo />
         </div>
         
         <h1 className="text-4xl md:text-5xl font-bold text-primary font-headline">
-          Tome decisões mais seguras na web.
+          Descubra riscos ocultos em sites e links antes de clicar.
         </h1>
-        <p className="mt-4 text-lg text-foreground/80 max-w-2xl mx-auto">
-          Zyntra Scan é uma ferramenta de análise passiva que ajuda você a identificar riscos técnicos e heurísticos em URLs antes que um clique se torne um problema.
+        <p className="mt-4 text-base sm:text-lg text-foreground/80 max-w-2xl mx-auto">
+          Análise técnica e heurística baseada em requisições HTTP passivas — sem downloads, sem invasão.
+        </p>
+         <p className="mt-2 text-xs sm:text-sm text-muted-foreground max-w-2xl mx-auto">
+          Pontuação de risco baseada em padrões reais usados em campanhas de phishing e golpes online.
         </p>
 
         <div className="mt-12">
@@ -25,6 +28,22 @@ export default function Home() {
         <div className="mt-4 text-sm text-muted-foreground">
           <p>Ou <Link href="/how-to-protect" className="underline hover:text-primary">aprenda a identificar os sinais de um golpe</Link>.</p>
         </div>
+        
+         <div className="mt-8 px-4 text-xs text-muted-foreground grid grid-cols-1 sm:grid-cols-3 gap-x-8 gap-y-4">
+            <div className="flex items-center gap-2">
+                <span className="text-primary">🔒</span>
+                <span>Nenhum dado do usuário é armazenado</span>
+            </div>
+            <div className="flex items-center gap-2">
+                <span className="text-primary">🌐</span>
+                <span>Apenas informações públicas são analisadas</span>
+            </div>
+            <div className="flex items-center gap-2">
+                <span className="text-primary">🚫</span>
+                <span>Não acessamos contas ou logins</span>
+            </div>
+        </div>
+
 
         <div className="mt-16 text-left grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="flex flex-col gap-2">
