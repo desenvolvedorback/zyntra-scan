@@ -38,18 +38,31 @@ function isRateLimited(ip: string): boolean {
   return false;
 }
 
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type',
+};
+
+export async function OPTIONS(request: NextRequest) {
+  return new NextResponse(null, {
+    status: 204,
+    headers: corsHeaders,
+  });
+}
+
 export async function GET(request: NextRequest) {
   const ip = request.ip ?? request.headers.get('x-forwarded-for') ?? '127.0.0.1';
 
   if (isRateLimited(ip)) {
-    return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+    return NextResponse.json({ error: 'Too many requests' }, { status: 429, headers: corsHeaders });
   }
 
   const { searchParams } = new URL(request.url);
   const urlToScan = searchParams.get('url');
 
   if (!urlToScan) {
-    return NextResponse.json({ error: 'URL parameter is required' }, { status: 400 });
+    return NextResponse.json({ error: 'URL parameter is required' }, { status: 400, headers: corsHeaders });
   }
 
   let formattedUrl = urlToScan.trim();
@@ -60,7 +73,7 @@ export async function GET(request: NextRequest) {
   try {
     new URL(formattedUrl);
   } catch (_) {
-    return NextResponse.json({ error: 'Invalid URL format' }, { status: 400 });
+    return NextResponse.json({ error: 'Invalid URL format' }, { status: 400, headers: corsHeaders });
   }
 
   try {
@@ -73,10 +86,10 @@ export async function GET(request: NextRequest) {
       siteAnalysis: siteAnalysisResult,
     };
 
-    return NextResponse.json(combinedResult, { status: 200 });
+    return NextResponse.json(combinedResult, { status: 200, headers: corsHeaders });
 
   } catch (error) {
     console.error('API Analysis Error:', error);
-    return NextResponse.json({ error: 'An internal error occurred during analysis.' }, { status: 500 });
+    return NextResponse.json({ error: 'An internal error occurred during analysis.' }, { status: 500, headers: corsHeaders });
   }
 }

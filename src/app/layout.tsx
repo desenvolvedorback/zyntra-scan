@@ -32,6 +32,7 @@ export default function RootLayout({
                 <Link href="/for-who" className="hover:text-primary hover:underline">Para Quem é</Link>
                 <Link href="/about" className="hover:text-primary hover:underline">Sobre</Link>
                 <Link href="/contact" className="hover:text-primary hover:underline">Contato</Link>
+                <Link href="/api-docs" className="hover:text-primary hover:underline">API</Link>
             </div>
              <p className="text-xs text-muted-foreground mb-4">
               Análise baseada em requisições HTTP passivas. Não realizamos ataques ou varreduras invasivas.
