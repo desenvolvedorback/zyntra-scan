@@ -18,6 +18,9 @@ export default function Home() {
         <p className="mt-2 text-sm text-muted-foreground">
           Análise técnica e heurística baseada em requisições HTTP passivas — sem downloads, sem invasão.
         </p>
+        <p className="mt-2 text-xs text-muted-foreground">
+          Pontuação de risco baseada em padrões reais usados em campanhas de phishing e golpes online.
+        </p>
         <div className="mt-12">
           <UrlForm />
         </div>
