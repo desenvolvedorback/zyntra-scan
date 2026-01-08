@@ -37,7 +37,7 @@ export default function HowToProtectPage() {
                 Antigamente, o cadeado verde (conexão HTTPS) era um sinal de que um site era seguro. Hoje, isso mudou. O HTTPS apenas garante que a comunicação entre você e o site é criptografada, impedindo que intermediários espionem os dados.
               </p>
               <p>
-                No entanto, <strong className="text-primary-foreground">isso não diz nada sobre as intenções do dono do site</strong>. Golpistas podem obter certificados SSL válidos facilmente (e de graça) para seus sites de phishing. Eles usam o cadeado para criar uma falsa sensação de segurança e enganar as vítimas para que insiram dados sensíveis.
+                No entanto, <strong>isso não diz nada sobre as intenções do dono do site</strong>. Golpistas podem obter certificados SSL válidos facilmente (e de graça) para seus sites de phishing. Eles usam o cadeado para criar uma falsa sensação de segurança e enganar as vítimas para que insiram dados sensíveis.
               </p>
               <p className="font-semibold text-amber-400">
                 Resumindo: um site com HTTPS pode perfeitamente ser um site de golpe. É por isso que ferramentas como a Zyntra Scan analisam outros fatores além do certificado.
