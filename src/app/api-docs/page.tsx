@@ -1,36 +1,67 @@
+
 import Link from 'next/link';
-import { ArrowLeft, Terminal, ShieldAlert } from 'lucide-react';
+import { ArrowLeft, Terminal, ShieldAlert, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export default function ApiDocsPage() {
   const exampleRequest = `fetch('https://zyntra-scan.onrender.com/api/scan?url=exemplo.com')
   .then(res => res.json())
   .then(data => console.log(data));`;
 
+    const exampleRequestSimple = `fetch('https://zyntra-scan.onrender.com/api/scan/simple?url=exemplo.com')
+  .then(res => res.json())
+  .then(data => console.log(data));`;
+
   const exampleResponse = `{
-  "url": "https://exemplo.com",
-  "riskAnalysis": {
-    "risk": "Baixo",
-    "score": 0,
-    "reasons": [
+  "meta": {
+    "analysisId": "ZS-1768146786734",
+    "reportVersion": "1.1",
+    "analysisEngine": "Zyntra Scan Engine v1.1 (Heurístico, Passivo)",
+    "analysisTimestamp": "11/01/2026, 12:53:06",
+    "targetUrl": "https://exemplo.com"
+  },
+  "evaluation": {
+    "riskLevel": "Baixo",
+    "riskLevelCode": "LOW",
+    "potentialImpact": "Baixo",
+    "riskProbability": "Baixa",
+    "heuristicScore": 1,
+    "trustIndicator": "Estável",
+    "analysisHistory": "Não disponível para esta análise"
+  },
+  "heuristicAnalysis": {
+    "riskFactors": [
       "Nenhum indicador de risco óbvio encontrado na análise heurística."
     ]
   },
-  "siteAnalysis": {
-    "status": 200,
-    "responseTime": 150,
+  "technicalDetections": {
+    "serverStatus": 200,
+    "responseTime": 100,
     "isHttps": true,
     "isSslValid": true,
+    "isRedirected": false,
+    "finalUrl": "https://exemplo.com",
     "securityHeaders": {
-      "csp": "default-src 'self'",
-      "xfo": "SAMEORIGIN",
-      "xcto": "nosniff"
-    },
-    "redirected": false,
-    "finalUrl": "https://exemplo.com/"
-  }
+      "csp": false,
+      "xfo": false,
+      "xcto": false
+    }
+  },
+  "scope": { ... },
+  "integrity": { ... }
+}`;
+    
+    const exampleResponseSimple = `{
+    "targetUrl": "https://exemplo.com",
+    "riskLevel": "Baixo",
+    "riskLevelCode": "LOW",
+    "heuristicScore": 1,
+    "isHttps": true,
+    "serverStatus": 200,
+    "error": null
 }`;
 
   return (
@@ -47,61 +78,78 @@ export default function ApiDocsPage() {
         <article className="prose prose-invert max-w-none text-foreground">
           <h1 className="text-4xl font-bold text-primary mb-4">Documentação da API Zyntra Scan</h1>
           <p className="text-lg text-muted-foreground">
-            Integre o poder da análise de risco da Zyntra em suas próprias aplicações, plugins de navegador ou widgets.
+            Integre o poder da análise de risco da Zyntra em suas próprias aplicações, plugins de navegador ou widgets com nossos endpoints flexíveis.
           </p>
 
-          <Card className="mt-8">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-3 text-2xl">
-                <Terminal className="text-blue-400" />
-                Endpoint Principal
-              </CardTitle>
-              <CardDescription>
-                A API possui um único endpoint que recebe uma URL e retorna a análise completa.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="p-4 bg-muted/50 rounded-lg font-mono text-sm space-x-2">
-                <Badge variant="secondary">GET</Badge>
-                <span>/api/scan</span>
-              </div>
-            </CardContent>
-          </Card>
+          <Tabs defaultValue="completa" className="mt-8">
+            <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="completa">API Completa</TabsTrigger>
+                <TabsTrigger value="simples">API Simples</TabsTrigger>
+            </TabsList>
+            <TabsContent value="completa">
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-3 text-2xl">
+                            <Terminal className="text-blue-400" />
+                            Endpoint Principal (Completo)
+                        </CardTitle>
+                        <CardDescription>
+                            Retorna um relatório de análise detalhado. Ideal para integrações que precisam de dados técnicos e heurísticos completos.
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="p-4 bg-muted/50 rounded-lg font-mono text-sm space-x-2 mb-6">
+                            <Badge variant="secondary">GET</Badge>
+                            <span>/api/scan</span>
+                        </div>
+                        <h3 className="text-lg font-semibold mb-2">Parâmetros</h3>
+                        <p className="font-semibold"><code>url</code> (string, obrigatório): A URL a ser analisada.</p>
+                        
+                         <h3 className="text-lg font-semibold mt-6 mb-2">Exemplo de Requisição</h3>
+                         <pre className="p-4 bg-muted/50 rounded-lg overflow-x-auto">
+                            <code className="text-sm font-mono">{exampleRequest}</code>
+                        </pre>
 
-          <Card className="mt-8">
-            <CardHeader>
-              <CardTitle>Parâmetros</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="font-semibold"><code>url</code> (string, obrigatório)</p>
-              <p className="text-muted-foreground mt-1">
-                A URL que você deseja analisar. O protocolo (http/https) é opcional.
-              </p>
-            </CardContent>
-          </Card>
+                        <h3 className="text-lg font-semibold mt-6 mb-2">Exemplo de Resposta (v1.1)</h3>
+                        <pre className="p-4 bg-muted/50 rounded-lg overflow-x-auto">
+                            <code className="text-sm font-mono">{exampleResponse}</code>
+                        </pre>
+                    </CardContent>
+                </Card>
+            </TabsContent>
+            <TabsContent value="simples">
+               <Card>
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-3 text-2xl">
+                            <Zap className="text-green-400" />
+                            Endpoint Simples (Resumido)
+                        </CardTitle>
+                        <CardDescription>
+                            Retorna uma resposta leve e rápida, ideal para widgets, previews ou integrações de baixo volume de dados.
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="p-4 bg-muted/50 rounded-lg font-mono text-sm space-x-2 mb-6">
+                            <Badge variant="secondary">GET</Badge>
+                            <span>/api/scan/simple</span>
+                        </div>
+                        <h3 className="text-lg font-semibold mb-2">Parâmetros</h3>
+                        <p className="font-semibold"><code>url</code> (string, obrigatório): A URL a ser analisada.</p>
 
-          <Card className="mt-8">
-            <CardHeader>
-              <CardTitle>Exemplo de Requisição</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <pre className="p-4 bg-muted/50 rounded-lg overflow-x-auto">
-                <code className="text-sm font-mono">{exampleRequest}</code>
-              </pre>
-            </CardContent>
-          </Card>
-          
-          <Card className="mt-8">
-            <CardHeader>
-              <CardTitle>Exemplo de Resposta</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <pre className="p-4 bg-muted/50 rounded-lg overflow-x-auto">
-                <code className="text-sm font-mono">{exampleResponse}</code>
-              </pre>
-            </CardContent>
-          </Card>
-          
+                        <h3 className="text-lg font-semibold mt-6 mb-2">Exemplo de Requisição</h3>
+                         <pre className="p-4 bg-muted/50 rounded-lg overflow-x-auto">
+                            <code className="text-sm font-mono">{exampleRequestSimple}</code>
+                        </pre>
+
+                        <h3 className="text-lg font-semibold mt-6 mb-2">Exemplo de Resposta</h3>
+                        <pre className="p-4 bg-muted/50 rounded-lg overflow-x-auto">
+                            <code className="text-sm font-mono">{exampleResponseSimple}</code>
+                        </pre>
+                    </CardContent>
+                </Card>
+            </TabsContent>
+          </Tabs>
+
           <Card className="mt-8 bg-amber-500/10 border-amber-500/30">
             <CardHeader>
               <CardTitle className="flex items-center gap-3 text-amber-400">
