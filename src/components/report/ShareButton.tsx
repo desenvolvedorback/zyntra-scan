@@ -39,6 +39,7 @@ export function ShareButton({ reportData }: ShareButtonProps) {
     report += `--- \n\n`;
     report += `**ID da Análise:** ${analysisId}\n`;
     report += `**Data/Hora da Análise:** ${analysisDate} (Horário de Brasília, GMT-3)\n`;
+    report += `**Motor de Análise:** Zyntra Scan Engine v1.0 (Heurístico)\n`;
     report += `**URL Alvo:** ${reportData.url}\n\n`;
 
     report += `### AVALIAÇÃO DE SEGURANÇA\n\n`;
@@ -73,12 +74,13 @@ export function ShareButton({ reportData }: ShareButtonProps) {
         report += `*   **Content-Security-Policy:** ${reportData.siteAnalysis.securityHeaders.csp ? 'Presente' : 'Ausente'}\n`;
         report += `*   **X-Frame-Options:** ${reportData.siteAnalysis.securityHeaders.xfo ? 'Presente' : 'Ausente'}\n`;
         report += `*   **X-Content-Type-Options:** ${reportData.siteAnalysis.securityHeaders.xcto ? 'Presente' : 'Ausente'}\n\n`;
-        report += `_Nota: A ausência de cabeçalhos de segurança é uma oportunidade de melhoria na postura defensiva do site, não sendo, por si só, um indicativo de comportamento malicioso._\n\n`;
     } else {
         report += `*   **Status do Servidor:** Falha na conexão. ${reportData.siteAnalysis.error}\n\n`;
     }
 
     report += `--- \n\n`;
+    report += `**ESCOPO DA ANÁLISE:**\nEste relatório é fruto de uma análise passiva de conectividade, configuração HTTPS, cabeçalhos HTTP e resposta do servidor. Nenhuma interação ativa, varredura de portas ou exploração de vulnerabilidades foi realizada.\n\n`;
+
     report += `**AVISO LEGAL:** Este relatório foi gerado pelo Zyntra Scan (https://zyntra-scan.onrender.com) e reflete os dados coletados de forma passiva no momento da análise. A avaliação de risco é baseada em heurísticas e não constitui um veredito final sobre a natureza do site. Este documento serve como um conjunto de evidências para apoiar uma decisão informada e pode ser usado como parte de uma denúncia formal a autoridades competentes.`;
 
     return report;

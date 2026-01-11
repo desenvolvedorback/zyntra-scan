@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { ArrowLeft, BookLock, BarChart3, Clock } from 'lucide-react';
+import { ArrowLeft, BookLock, BarChart3, Clock, FileText } from 'lucide-react';
 import { analyzeSite, analyzeLink, SiteAnalysisResult, LinkAnalysisResult } from '@/lib/analysis';
 import { ReportSummary } from '@/components/report/ReportSummary';
 import { LinkAnalysisCard } from '@/components/report/LinkAnalysisCard';
@@ -60,9 +60,12 @@ async function ReportGenerator({ url }: { url: string }) {
   return (
     <>
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-        <p className="text-sm text-muted-foreground">
-          Relatório gerado em: {analysisDate} (Horário de Brasília)
-        </p>
+        <div>
+          <p className="text-sm text-muted-foreground">
+            Relatório gerado em: {analysisDate} (Horário de Brasília)
+          </p>
+          <p className="text-xs text-muted-foreground">ID da Análise: ZS-{new Date().getTime()}</p>
+        </div>
         <ShareButton reportData={reportData} />
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -96,8 +99,21 @@ async function ReportGenerator({ url }: { url: string }) {
               </CardContent>
           </Card>
         </div>
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-2 space-y-6">
           <SiteAnalysisCard result={siteAnalysisResult} />
+           <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-3 text-lg">
+                    <FileText className="text-blue-400" />
+                    Escopo da Análise
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                  <p className="text-sm text-muted-foreground">
+                    Esta é uma análise passiva de conectividade, configuração HTTPS, cabeçalhos HTTP e resposta do servidor. Nenhuma interação ativa, varredura de portas ou exploração de vulnerabilidades foi realizada.
+                  </p>
+              </CardContent>
+            </Card>
         </div>
       </div>
     </>
