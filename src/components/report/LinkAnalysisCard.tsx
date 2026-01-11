@@ -29,7 +29,7 @@ export function LinkAnalysisCard({ result }: LinkAnalysisCardProps) {
              <div className="pt-2">
                 <RiskIndicator risk={result.risk} />
             </div>
-            <CardDescription>Pontuação de Risco: {result.score}</CardDescription>
+            <CardDescription>Pontuação de Risco: {result.score} (de 10). Pontuações baixas indicam ausência de fatores de risco comuns.</CardDescription>
           </CardHeader>
           <CardContent>
              <div className="flex items-center gap-3 text-sm text-muted-foreground">
@@ -51,7 +51,7 @@ export function LinkAnalysisCard({ result }: LinkAnalysisCardProps) {
          <div className="pt-2">
             <RiskIndicator risk={result.risk} />
         </div>
-        <CardDescription>Pontuação de Risco: {result.score}</CardDescription>
+        <CardDescription>Pontuação de Risco: {result.score} (de 10). A pontuação aumenta com a quantidade e severidade dos fatores de risco detectados.</CardDescription>
       </CardHeader>
       <CardContent>
         <p className="text-sm text-muted-foreground mb-4">Fatores que contribuíram para a pontuação:</p>

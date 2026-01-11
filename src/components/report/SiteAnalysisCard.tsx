@@ -77,7 +77,12 @@ export function SiteAnalysisCard({ result }: SiteAnalysisCardProps) {
           value={result.redirected ? `Sim, para ${result.finalUrl}` : 'Não'}
           status={result.redirected ? 'neutral' : 'good'}
         />
-        <h3 className="text-md font-semibold pt-6 pb-2 px-1">Cabeçalhos de Segurança</h3>
+        <div className="px-1 pt-6 pb-2">
+            <h3 className="text-md font-semibold">Cabeçalhos de Segurança</h3>
+            <p className="text-xs text-muted-foreground mt-1">
+                A ausência destes cabeçalhos não é um indicador de fraude, mas representa uma oportunidade de melhoria na segurança do site contra certos tipos de ataque.
+            </p>
+        </div>
         <AnalysisDetailRow 
           label="Content-Security-Policy" 
           value={renderHeaderValue(result.securityHeaders.csp)}
