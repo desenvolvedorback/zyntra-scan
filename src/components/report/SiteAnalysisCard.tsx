@@ -11,7 +11,6 @@ function renderHeaderValue(value: string | boolean) {
     if (typeof value === 'boolean') {
         return value ? 'Presente' : 'Ausente';
     }
-    // Return a snippet for long policies
     if (value.length > 30) {
         return `Presente (${value.substring(0,30)}...)`
     }
@@ -23,12 +22,12 @@ export function SiteAnalysisCard({ result }: SiteAnalysisCardProps) {
     return (
         <Card className="h-full">
             <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                    <Server className="h-5 w-5" />
-                    Análise Técnica do Servidor
+                <CardTitle className="flex items-center gap-2 text-xl">
+                    <Server className="h-5 w-5 text-primary" />
+                    Detecções Técnicas
                 </CardTitle>
                 <CardDescription>
-                    Detalhes técnicos da conexão com o servidor.
+                    Estes são os dados brutos coletados da conexão com o servidor.
                 </CardDescription>
             </CardHeader>
             <CardContent>
@@ -43,12 +42,12 @@ export function SiteAnalysisCard({ result }: SiteAnalysisCardProps) {
   return (
     <Card className="h-full">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Server className="h-5 w-5" />
-          Análise Técnica do Servidor
+        <CardTitle className="flex items-center gap-2 text-xl">
+          <Server className="h-5 w-5 text-primary" />
+          Detecções Técnicas
         </CardTitle>
         <CardDescription>
-          Dados brutos coletados a partir da conexão passiva com o site.
+          Estes são os dados brutos coletados da conexão com o servidor.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-1">
@@ -69,7 +68,7 @@ export function SiteAnalysisCard({ result }: SiteAnalysisCardProps) {
         />
          <AnalysisDetailRow 
           label="Certificado SSL Válido" 
-          value={result.isSslValid === null ? 'Não foi possível verificar' : result.isSslValid ? 'Sim' : 'Não'}
+          value={result.isSslValid === null ? 'Não verificado (HTTP)' : result.isSslValid ? 'Sim' : 'Inválido/Expirado'}
           status={result.isSslValid === null ? 'neutral' : result.isSslValid ? 'good' : 'bad'}
         />
         <AnalysisDetailRow 
@@ -78,25 +77,25 @@ export function SiteAnalysisCard({ result }: SiteAnalysisCardProps) {
           status={result.redirected ? 'neutral' : 'good'}
         />
         <div className="px-1 pt-6 pb-2">
-            <h3 className="text-md font-semibold">Cabeçalhos de Segurança</h3>
-            <p className="text-xs text-muted-foreground mt-1">
-                A ausência destes cabeçalhos é uma oportunidade de melhoria na segurança do site, mas não é, por si só, um indicador de atividade maliciosa.
+            <h3 className="text-md font-semibold">Cabeçalhos de Segurança HTTP</h3>
+             <p className="text-xs text-muted-foreground mt-1 italic">
+                Nota: A ausência destes cabeçalhos representa uma oportunidade de melhoria na postura defensiva do site, não sendo, por si só, indicativo de comportamento malicioso.
             </p>
         </div>
         <AnalysisDetailRow 
           label="Content-Security-Policy" 
           value={renderHeaderValue(result.securityHeaders.csp)}
-          status={result.securityHeaders.csp ? 'good' : 'neutral'}
+          status={result.securityHeaders.csp ? 'good' : 'info'}
         />
         <AnalysisDetailRow 
           label="X-Frame-Options" 
           value={renderHeaderValue(result.securityHeaders.xfo)}
-          status={result.securityHeaders.xfo ? 'good' : 'neutral'}
+          status={result.securityHeaders.xfo ? 'good' : 'info'}
         />
         <AnalysisDetailRow 
           label="X-Content-Type-Options" 
           value={renderHeaderValue(result.securityHeaders.xcto)}
-          status={result.securityHeaders.xcto ? 'good' : 'neutral'}
+          status={result.securityHeaders.xcto ? 'good' : 'info'}
         />
       </CardContent>
     </Card>
