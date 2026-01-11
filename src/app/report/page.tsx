@@ -34,7 +34,20 @@ interface ApiReport {
     heuristicAnalysis: {
         riskFactors: string[];
     };
-    technicalDetections: SiteAnalysisResult & { isRedirected: boolean }; // Combining for simplicity
+    technicalDetections: {
+        serverStatus: number | null;
+        responseTime: number | null;
+        isHttps: boolean;
+        isSslValid: boolean | null;
+        isRedirected: boolean;
+        finalUrl: string;
+        securityHeaders: {
+            csp: string | boolean;
+            xfo: string | boolean;
+            xcto: string | boolean;
+        };
+        error?: string;
+    };
     scope: {
         summary: string;
         limitations: string[];
@@ -77,8 +90,14 @@ async function ReportGenerator({ url }: { url: string }) {
             riskFactors: linkAnalysisResult.reasons
         },
         technicalDetections: {
-            ...siteAnalysisResult,
+            serverStatus: siteAnalysisResult.status,
+            responseTime: siteAnalysisResult.responseTime,
+            isHttps: siteAnalysisResult.isHttps,
+            isSslValid: siteAnalysisResult.isSslValid,
             isRedirected: siteAnalysisResult.redirected,
+            finalUrl: siteAnalysisResult.finalUrl,
+            securityHeaders: siteAnalysisResult.securityHeaders,
+            error: siteAnalysisResult.error,
         },
         scope: {
             summary: "Análise passiva de conectividade, configuração HTTPS, cabeçalhos HTTP e resposta do servidor. Nenhuma interação ativa, exploração ou tentativa de intrusão foi realizada.",
@@ -97,7 +116,7 @@ async function ReportGenerator({ url }: { url: string }) {
         meta: { analysisId: `ZS-${now.getTime()}`, reportVersion: "1.0", analysisEngine: "Zyntra Scan Engine v1.0", analysisTimestamp: now.toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' }), targetUrl: url },
         evaluation: { riskLevel: 'Alto', potentialImpact: "Alto", riskProbability: "Alta", heuristicScore: 10, trustIndicator: 'Crítico', analysisHistory: 'Não disponível' },
         heuristicAnalysis: { riskFactors: [validationError] },
-        technicalDetections: { status: null, responseTime: null, isHttps: false, isSslValid: null, securityHeaders: { csp: false, xfo: false, xcto: false }, redirected: false, finalUrl: '', error: validationError, isRedirected: false },
+        technicalDetections: { serverStatus: null, responseTime: null, isHttps: false, isSslValid: null, securityHeaders: { csp: false, xfo: false, xcto: false }, redirected: false, finalUrl: '', error: validationError, isRedirected: false },
         scope: { summary: '', limitations: [] }
     }
   }
@@ -128,7 +147,7 @@ async function ReportGenerator({ url }: { url: string }) {
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-3">
-          <ReportSummary url={reportData.meta.targetUrl} risk={reportData.evaluation.riskLevel} siteStatus={reportData.technicalDetections.status} />
+          <ReportSummary url={reportData.meta.targetUrl} risk={reportData.evaluation.riskLevel} siteStatus={reportData.technicalDetections.serverStatus} />
         </div>
         <div className="lg:col-span-1 space-y-6">
           <LinkAnalysisCard evaluation={reportData.evaluation} heuristic={reportData.heuristicAnalysis} />

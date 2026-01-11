@@ -93,7 +93,7 @@ export function SiteAnalysisCard({ result }: SiteAnalysisCardProps) {
         <div className="px-1 pt-6 pb-2">
             <h3 className="text-md font-semibold">Cabeçalhos de Segurança HTTP</h3>
              <p className="text-xs text-muted-foreground mt-1 italic">
-                Nota: A ausência destes cabeçalhos representa uma oportunidade de melhoria na postura defensiva do site, não sendo, por si só, indicativo de comportamento malicioso.
+                A ausência destes cabeçalhos representa uma oportunidade de melhoria na postura defensiva do site, não sendo, por si só, indicativo de comportamento malicioso.
             </p>
         </div>
         <AnalysisDetailRow 
