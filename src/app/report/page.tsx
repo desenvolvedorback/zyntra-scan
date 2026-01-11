@@ -116,7 +116,7 @@ async function ReportGenerator({ url }: { url: string }) {
         meta: { analysisId: `ZS-${now.getTime()}`, reportVersion: "1.0", analysisEngine: "Zyntra Scan Engine v1.0", analysisTimestamp: now.toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' }), targetUrl: url },
         evaluation: { riskLevel: 'Alto', potentialImpact: "Alto", riskProbability: "Alta", heuristicScore: 10, trustIndicator: 'Crítico', analysisHistory: 'Não disponível' },
         heuristicAnalysis: { riskFactors: [validationError] },
-        technicalDetections: { serverStatus: null, responseTime: null, isHttps: false, isSslValid: null, securityHeaders: { csp: false, xfo: false, xcto: false }, redirected: false, finalUrl: '', error: validationError, isRedirected: false },
+        technicalDetections: { serverStatus: null, responseTime: null, isHttps: false, isSslValid: null, securityHeaders: { csp: false, xfo: false, xcto: false }, redirected: false, finalUrl: '', error: validationError },
         scope: { summary: '', limitations: [] }
     }
   }
