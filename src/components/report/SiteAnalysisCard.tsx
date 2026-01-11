@@ -25,7 +25,7 @@ export function SiteAnalysisCard({ result }: SiteAnalysisCardProps) {
             <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                     <Server className="h-5 w-5" />
-                    Análise do Site
+                    Análise Técnica do Servidor
                 </CardTitle>
                 <CardDescription>
                     Detalhes técnicos da conexão com o servidor.
@@ -48,7 +48,7 @@ export function SiteAnalysisCard({ result }: SiteAnalysisCardProps) {
           Análise Técnica do Servidor
         </CardTitle>
         <CardDescription>
-          Dados brutos coletados a partir da conexão com o site.
+          Dados brutos coletados a partir da conexão passiva com o site.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-1">
@@ -69,7 +69,7 @@ export function SiteAnalysisCard({ result }: SiteAnalysisCardProps) {
         />
          <AnalysisDetailRow 
           label="Certificado SSL Válido" 
-          value={result.isSslValid === null ? 'Indeterminado' : result.isSslValid ? 'Sim' : 'Não'}
+          value={result.isSslValid === null ? 'Não foi possível verificar' : result.isSslValid ? 'Sim' : 'Não'}
           status={result.isSslValid === null ? 'neutral' : result.isSslValid ? 'good' : 'bad'}
         />
         <AnalysisDetailRow 
@@ -80,7 +80,7 @@ export function SiteAnalysisCard({ result }: SiteAnalysisCardProps) {
         <div className="px-1 pt-6 pb-2">
             <h3 className="text-md font-semibold">Cabeçalhos de Segurança</h3>
             <p className="text-xs text-muted-foreground mt-1">
-                A ausência destes cabeçalhos não é um indicador de fraude, mas representa uma oportunidade de melhoria na segurança do site contra certos tipos de ataque.
+                A ausência destes cabeçalhos é uma oportunidade de melhoria na segurança do site, mas não é, por si só, um indicador de atividade maliciosa.
             </p>
         </div>
         <AnalysisDetailRow 
