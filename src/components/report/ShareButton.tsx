@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Download } from "lucide-react";
-import type { SiteAnalysisResult, LinkAnalysisResult } from "@/lib/analysis";
 
 interface ApiReport {
     meta: {
@@ -15,6 +14,7 @@ interface ApiReport {
     };
     evaluation: {
         riskLevel: 'Baixo' | 'Médio' | 'Alto';
+        riskLevelCode: 'LOW' | 'MEDIUM' | 'HIGH';
         potentialImpact: string;
         riskProbability: string;
         heuristicScore: number;
@@ -42,6 +42,9 @@ interface ApiReport {
         summary: string;
         limitations: string[];
     };
+    integrity: {
+      hash: string;
+    }
 }
 
 
@@ -53,16 +56,16 @@ export function ShareButton({ reportData }: ShareButtonProps) {
   const { toast } = useToast();
 
   const generateReportText = () => {
-    const { meta, evaluation, heuristicAnalysis, technicalDetections, scope } = reportData;
+    const { meta, evaluation, heuristicAnalysis, technicalDetections, scope, integrity } = reportData;
 
-    let report = `**DOSSIÊ DE ANÁLISE DE RISCO — ZYNTRA SCAN v1.0**\n\n`;
+    let report = `**DOSSIÊ DE ANÁLISE DE RISCO — ZYNTRA SCAN**\n\n`;
     report += `**ID da Análise:** ${meta.analysisId}\n`;
     report += `**Versão do Relatório:** ${meta.reportVersion}\n`;
     report += `**Motor de Análise:** ${meta.analysisEngine}\n`;
     report += `**Data/Hora da Análise:** ${meta.analysisTimestamp}\n`;
     report += `**URL Alvo:** ${meta.targetUrl}\n\n`;
 
-    report += `--- \n`;
+    report += `--- \n\n`;
     report += `### AVALIAÇÃO DE SEGURANÇA\n\n`;
     report += `*   **Nível de Risco Avaliado:** ${evaluation.riskLevel}\n`;
     report += `*   **Impacto Potencial:** ${evaluation.potentialImpact}\n`;
@@ -100,7 +103,7 @@ export function ShareButton({ reportData }: ShareButtonProps) {
     }
     report += `*Nota: A ausência de cabeçalhos de segurança representa uma oportunidade de melhoria na postura defensiva do site e não indica, por si só, comportamento malicioso.*\n\n`;
 
-    report += `--- \n`;
+    report += `--- \n\n`;
     report += `### ESCOPO DA ANÁLISE\n\n`;
     report += `${scope.summary}\n\n`;
     report += `**Limitações:**\n`;
@@ -109,8 +112,12 @@ export function ShareButton({ reportData }: ShareButtonProps) {
     });
     report += `\n`;
 
-    report += `--- \n`;
+    report += `--- \n\n`;
     report += `**AVISO LEGAL:**\nEste relatório foi gerado pelo Zyntra Scan (https://zyntra-scan.onrender.com) e reflete dados coletados de forma passiva no momento da análise. A avaliação de risco é baseada em heurísticas e não constitui veredito final sobre a natureza do site. Este documento serve como conjunto de evidências para apoiar decisões informadas e pode ser utilizado como parte de uma denúncia formal a autoridades competentes.\n\n`;
+
+    report += `--- \n`;
+    report += `### APÊNDICE TÉCNICO — DADOS ESTRUTURADOS (JSON)\n\n`;
+    report += `\`\`\`json\n${JSON.stringify({ meta, evaluation, heuristicAnalysis, technicalDetections, scope, integrity }, null, 2)}\n\`\`\``;
 
     return report;
   };

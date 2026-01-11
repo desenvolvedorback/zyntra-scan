@@ -25,6 +25,7 @@ interface ApiReport {
     };
     evaluation: {
         riskLevel: 'Baixo' | 'Médio' | 'Alto';
+        riskLevelCode: 'LOW' | 'MEDIUM' | 'HIGH';
         potentialImpact: string;
         riskProbability: string;
         heuristicScore: number;
@@ -52,6 +53,9 @@ interface ApiReport {
         summary: string;
         limitations: string[];
     };
+    integrity: {
+        hash: string;
+    }
 }
 
 
@@ -69,17 +73,23 @@ async function ReportGenerator({ url }: { url: string }) {
     const siteAnalysisResult = await analyzeSite(url);
     const linkAnalysisResult = analyzeLink(url, siteAnalysisResult);
     const { impact, probability } = getImpactAndProbability(linkAnalysisResult.risk);
+    const riskLevelCode = {
+      'Baixo': 'LOW',
+      'Médio': 'MEDIUM',
+      'Alto': 'HIGH'
+    }[linkAnalysisResult.risk] as 'LOW' | 'MEDIUM' | 'HIGH';
 
     reportData = {
         meta: {
             analysisId: `ZS-${now.getTime()}`,
-            reportVersion: "1.0",
-            analysisEngine: "Zyntra Scan Engine v1.0 (Heurístico, Passivo)",
+            reportVersion: "1.1",
+            analysisEngine: "Zyntra Scan Engine v1.1 (Heurístico, Passivo)",
             analysisTimestamp: now.toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' }),
             targetUrl: url
         },
         evaluation: {
             riskLevel: linkAnalysisResult.risk,
+            riskLevelCode: riskLevelCode,
             potentialImpact: impact,
             riskProbability: probability,
             heuristicScore: linkAnalysisResult.score,
@@ -106,6 +116,9 @@ async function ReportGenerator({ url }: { url: string }) {
                 "Resultados podem variar conforme alterações no ambiente do alvo.",
                 "A avaliação é heurística e não substitui auditorias completas."
             ]
+        },
+        integrity: {
+            hash: "sha256:placeholder_for_future_implementation"
         }
     };
 
@@ -113,11 +126,12 @@ async function ReportGenerator({ url }: { url: string }) {
     validationError = "A URL fornecida é inválida.";
     // Create a dummy error report structure
     reportData = {
-        meta: { analysisId: `ZS-${now.getTime()}`, reportVersion: "1.0", analysisEngine: "Zyntra Scan Engine v1.0", analysisTimestamp: now.toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' }), targetUrl: url },
-        evaluation: { riskLevel: 'Alto', potentialImpact: "Alto", riskProbability: "Alta", heuristicScore: 10, trustIndicator: 'Crítico', analysisHistory: 'Não disponível' },
+        meta: { analysisId: `ZS-${now.getTime()}`, reportVersion: "1.1", analysisEngine: "Zyntra Scan Engine v1.1", analysisTimestamp: now.toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' }), targetUrl: url },
+        evaluation: { riskLevel: 'Alto', riskLevelCode: 'HIGH', potentialImpact: "Alto", riskProbability: "Alta", heuristicScore: 10, trustIndicator: 'Crítico', analysisHistory: 'Não disponível' },
         heuristicAnalysis: { riskFactors: [validationError] },
         technicalDetections: { serverStatus: null, responseTime: null, isHttps: false, isSslValid: null, securityHeaders: { csp: false, xfo: false, xcto: false }, redirected: false, finalUrl: '', error: validationError },
-        scope: { summary: '', limitations: [] }
+        scope: { summary: '', limitations: [] },
+        integrity: { hash: '' }
     }
   }
   
@@ -139,7 +153,7 @@ async function ReportGenerator({ url }: { url: string }) {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <div>
           <p className="text-sm text-muted-foreground">
-            Relatório gerado em: {reportData.meta.analysisTimestamp} (Horário de Brasília)
+            Relatório gerado em: {reportData.meta.analysisTimestamp}
           </p>
           <p className="text-xs text-muted-foreground">ID da Análise: {reportData.meta.analysisId}</p>
         </div>

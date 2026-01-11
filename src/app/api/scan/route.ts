@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import { analyzeSite, analyzeLink, SiteAnalysisResult, LinkAnalysisResult, getImpactAndProbability } from '@/lib/analysis';
+import { analyzeSite, analyzeLink, getImpactAndProbability } from '@/lib/analysis';
 
 export const config = {
   runtime: 'edge',
@@ -81,22 +81,29 @@ export async function GET(request: NextRequest) {
     const siteAnalysisResult = await analyzeSite(formattedUrl);
     const linkAnalysisResult = analyzeLink(formattedUrl, siteAnalysisResult);
     const { impact, probability } = getImpactAndProbability(linkAnalysisResult.risk);
+    
+    const riskLevelCode = {
+      'Baixo': 'LOW',
+      'Médio': 'MEDIUM',
+      'Alto': 'HIGH'
+    }[linkAnalysisResult.risk] as 'LOW' | 'MEDIUM' | 'HIGH';
 
     const combinedResult = {
         meta: {
             analysisId: `ZS-${now.getTime()}`,
-            reportVersion: "1.0",
-            analysisEngine: "Zyntra Scan Engine v1.0 (Heurístico, Passivo)",
+            reportVersion: "1.1",
+            analysisEngine: "Zyntra Scan Engine v1.1 (Heurístico, Passivo)",
             analysisTimestamp: now.toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' }),
             targetUrl: formattedUrl
         },
         evaluation: {
             riskLevel: linkAnalysisResult.risk,
+            riskLevelCode: riskLevelCode,
             potentialImpact: impact,
             riskProbability: probability,
             heuristicScore: linkAnalysisResult.score,
-            trustIndicator: "Estável", // Placeholder
-            analysisHistory: "Não disponível para esta análise" // Placeholder
+            trustIndicator: "Estável",
+            analysisHistory: "Não disponível para esta análise"
         },
         heuristicAnalysis: {
             riskFactors: linkAnalysisResult.reasons
@@ -118,6 +125,9 @@ export async function GET(request: NextRequest) {
                 "Resultados podem variar conforme alterações no ambiente do alvo.",
                 "A avaliação é heurística e não substitui auditorias completas."
             ]
+        },
+        integrity: {
+            hash: "sha256:placeholder_for_future_implementation"
         }
     };
 
