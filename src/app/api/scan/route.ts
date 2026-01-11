@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import { analyzeSite, analyzeLink } from '@/lib/analysis';
+import { analyzeSite, analyzeLink, SiteAnalysisResult, LinkAnalysisResult, getImpactAndProbability } from '@/lib/analysis';
 
 export const config = {
   runtime: 'edge',
@@ -60,6 +60,7 @@ export async function GET(request: NextRequest) {
 
   const { searchParams } = new URL(request.url);
   const urlToScan = searchParams.get('url');
+  const now = new Date();
 
   if (!urlToScan) {
     return NextResponse.json({ error: 'URL parameter is required' }, { status: 400, headers: corsHeaders });
@@ -79,17 +80,55 @@ export async function GET(request: NextRequest) {
   try {
     const siteAnalysisResult = await analyzeSite(formattedUrl);
     const linkAnalysisResult = analyzeLink(formattedUrl, siteAnalysisResult);
+    const { impact, probability } = getImpactAndProbability(linkAnalysisResult.risk);
 
     const combinedResult = {
-      url: formattedUrl,
-      riskAnalysis: linkAnalysisResult,
-      siteAnalysis: siteAnalysisResult,
+        meta: {
+            analysisId: `ZS-${now.getTime()}`,
+            reportVersion: "1.0",
+            analysisEngine: "Zyntra Scan Engine v1.0 (Heurístico, Passivo)",
+            analysisTimestamp: now.toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' }),
+            targetUrl: formattedUrl
+        },
+        evaluation: {
+            riskLevel: linkAnalysisResult.risk,
+            potentialImpact: impact,
+            riskProbability: probability,
+            heuristicScore: linkAnalysisResult.score,
+            trustIndicator: "Estável", // Placeholder
+            analysisHistory: "Não disponível para esta análise" // Placeholder
+        },
+        heuristicAnalysis: {
+            riskFactors: linkAnalysisResult.reasons
+        },
+        technicalDetections: {
+            serverStatus: siteAnalysisResult.status,
+            responseTime: siteAnalysisResult.responseTime,
+            isHttps: siteAnalysisResult.isHttps,
+            isSslValid: siteAnalysisResult.isSslValid,
+            isRedirected: siteAnalysisResult.redirected,
+            finalUrl: siteAnalysisResult.finalUrl,
+            securityHeaders: siteAnalysisResult.securityHeaders,
+            error: siteAnalysisResult.error
+        },
+        scope: {
+            summary: "Análise passiva de conectividade, configuração HTTPS, cabeçalhos HTTP e resposta do servidor. Nenhuma interação ativa, exploração ou tentativa de intrusão foi realizada.",
+            limitations: [
+                "A análise reflete o estado do alvo no momento da coleta.",
+                "Resultados podem variar conforme alterações no ambiente do alvo.",
+                "A avaliação é heurística e não substitui auditorias completas."
+            ]
+        }
     };
 
     return NextResponse.json(combinedResult, { status: 200, headers: corsHeaders });
 
   } catch (error) {
     console.error('API Analysis Error:', error);
-    return NextResponse.json({ error: 'An internal error occurred during analysis.' }, { status: 500, headers: corsHeaders });
+    const analysisId = `ZS-${now.getTime()}`;
+    return NextResponse.json({ 
+        error: 'An internal error occurred during analysis.',
+        analysisId
+    }, { status: 500, headers: corsHeaders });
   }
 }

@@ -3,85 +3,114 @@
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Download } from "lucide-react";
-import type { SiteAnalysisResult } from "@/lib/analysis";
+import type { SiteAnalysisResult, LinkAnalysisResult } from "@/lib/analysis";
+
+interface ApiReport {
+    meta: {
+        analysisId: string;
+        reportVersion: string;
+        analysisEngine: string;
+        analysisTimestamp: string;
+        targetUrl: string;
+    };
+    evaluation: {
+        riskLevel: 'Baixo' | 'Médio' | 'Alto';
+        potentialImpact: string;
+        riskProbability: string;
+        heuristicScore: number;
+        trustIndicator: string;
+        analysisHistory: string;
+    };
+    heuristicAnalysis: {
+        riskFactors: string[];
+    };
+    technicalDetections: {
+        serverStatus: number | null;
+        responseTime: number | null;
+        isHttps: boolean;
+        isSslValid: boolean | null;
+        isRedirected: boolean;
+        finalUrl: string;
+        securityHeaders: {
+            csp: string | boolean;
+            xfo: string | boolean;
+            xcto: string | boolean;
+        };
+        error?: string;
+    };
+    scope: {
+        summary: string;
+        limitations: string[];
+    };
+}
+
 
 interface ShareButtonProps {
-  reportData: {
-    url: string;
-    risk: 'Baixo' | 'Médio' | 'Alto';
-    score: number;
-    reasons: string[];
-    siteAnalysis: SiteAnalysisResult;
-  };
+  reportData: ApiReport;
 }
 
 export function ShareButton({ reportData }: ShareButtonProps) {
   const { toast } = useToast();
 
-  const getImpactAndProbability = (riskLevel: 'Baixo' | 'Médio' | 'Alto') => {
-    switch (riskLevel) {
-        case 'Alto':
-            return { impact: "Alto", probability: "Alta" };
-        case 'Médio':
-            return { impact: "Médio", probability: "Média" };
-        case 'Baixo':
-        default:
-            return { impact: "Baixo", probability: "Baixa" };
-    }
-  };
-
   const generateReportText = () => {
-    const analysisId = `ZS-${new Date().getTime()}`;
-    const analysisDate = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
-    const { impact, probability } = getImpactAndProbability(reportData.risk);
+    const { meta, evaluation, heuristicAnalysis, technicalDetections, scope } = reportData;
 
-    let report = `**DOSSIÊ DE ANÁLISE DE RISCO — ZYNTRA SCAN**\n\n`;
-    report += `--- \n\n`;
-    report += `**ID da Análise:** ${analysisId}\n`;
-    report += `**Data/Hora da Análise:** ${analysisDate} (Horário de Brasília, GMT-3)\n`;
-    report += `**Motor de Análise:** Zyntra Scan Engine v1.0 (Heurístico)\n`;
-    report += `**URL Alvo:** ${reportData.url}\n\n`;
+    let report = `**DOSSIÊ DE ANÁLISE DE RISCO — ZYNTRA SCAN v1.0**\n\n`;
+    report += `**ID da Análise:** ${meta.analysisId}\n`;
+    report += `**Versão do Relatório:** ${meta.reportVersion}\n`;
+    report += `**Motor de Análise:** ${meta.analysisEngine}\n`;
+    report += `**Data/Hora da Análise:** ${meta.analysisTimestamp} (Horário de Brasília, GMT-3)\n`;
+    report += `**URL Alvo:** ${meta.targetUrl}\n\n`;
 
+    report += `--- \n`;
     report += `### AVALIAÇÃO DE SEGURANÇA\n\n`;
-    report += `*   **Nível de Risco Avaliado:** ${reportData.risk}\n`;
-    report += `*   **Impacto Potencial:** ${impact}\n`;
-    report += `*   **Probabilidade de Risco:** ${probability}\n`;
-    report += `*   **Pontuação Heurística:** ${reportData.score}/10\n`;
-    report += `*   **Zyntra Trust Indicator:** Estável\n`;
-    report += `*   **Histórico de Análise:** Não disponível para esta análise.\n\n`;
+    report += `*   **Nível de Risco Avaliado:** ${evaluation.riskLevel}\n`;
+    report += `*   **Impacto Potencial:** ${evaluation.potentialImpact}\n`;
+    report += `*   **Probabilidade de Risco:** ${evaluation.riskProbability}\n`;
+    report += `*   **Pontuação Heurística:** ${evaluation.heuristicScore}/10\n`;
+    report += `*   **Zyntra Trust Indicator:** ${evaluation.trustIndicator}\n`;
+    report += `*   **Histórico de Análise:** ${evaluation.analysisHistory}\n\n`;
     
-    report += `**Conclusão:** Baseado em análise passiva e heurística, a URL apresenta um nível de risco **${reportData.risk.toUpperCase()}**. As evidências que sustentam esta avaliação estão detalhadas abaixo.\n\n`;
+    report += `**Conclusão:**\nBaseado em análise passiva e heurística, a URL apresenta um nível de risco **${evaluation.riskLevel.toUpperCase()}**. As evidências técnicas que sustentam esta avaliação estão detalhadas nas seções a seguir.\n\n`;
 
-    if(reportData.risk !== 'Baixo' && reportData.reasons.length > 0) {
-        report += `**Fatores de Risco (Avaliação Heurística):**\n`;
-        reportData.reasons.forEach(reason => {
+    report += `**Fatores de Risco (Avaliação Heurística):**\n`;
+    if(evaluation.riskLevel !== 'Baixo' && heuristicAnalysis.riskFactors.length > 0) {
+        heuristicAnalysis.riskFactors.forEach(reason => {
             report += `*   ${reason}\n`;
         });
         report += `\n`;
     } else {
-        report += `**Fatores de Risco (Avaliação Heurística):**\n*   Nenhum indicador de risco significativo foi encontrado.\n\n`;
+        report += `*   Nenhum indicador de risco significativo foi encontrado.\n\n`;
     }
 
     report += `### DETECÇÕES TÉCNICAS (Dados Brutos Coletados)\n\n`;
-    if(reportData.siteAnalysis.status) {
-        report += `*   **Status do Servidor:** ${reportData.siteAnalysis.status}\n`;
-        report += `*   **Tempo de Resposta:** ${reportData.siteAnalysis.responseTime} ms\n`;
-        report += `*   **Conexão Segura (HTTPS):** ${reportData.siteAnalysis.isHttps ? 'Sim' : 'Não'}\n`;
-        report += `*   **Validade do Certificado SSL:** ${reportData.siteAnalysis.isSslValid === null ? 'Não verificado (conexão HTTP)' : reportData.siteAnalysis.isSslValid ? 'Válido' : 'Inválido ou Expirado'}\n`;
-        report += `*   **Redirecionamento Detectado:** ${reportData.siteAnalysis.redirected ? `Sim, para ${reportData.siteAnalysis.finalUrl}` : 'Não'}\n\n`;
+    if(technicalDetections.error) {
+        report += `*   **Status do Servidor:** Falha na conexão. ${technicalDetections.error}\n\n`;
+    } else {
+        report += `*   **Status do Servidor:** ${technicalDetections.serverStatus}\n`;
+        report += `*   **Tempo de Resposta:** ${technicalDetections.responseTime} ms\n`;
+        report += `*   **Conexão Segura (HTTPS):** ${technicalDetections.isHttps ? 'Sim' : 'Não'}\n`;
+        report += `*   **Validade do Certificado SSL:** ${technicalDetections.isSslValid === null ? 'Não aplicável (conexão HTTP)' : technicalDetections.isSslValid ? 'Válido' : 'Inválido ou Expirado'}\n`;
+        report += `*   **Redirecionamento Detectado:** ${technicalDetections.isRedirected ? `Sim, para ${technicalDetections.finalUrl}` : 'Não'}\n\n`;
         
         report += `**Cabeçalhos de Segurança HTTP:**\n`;
-        report += `*   **Content-Security-Policy:** ${reportData.siteAnalysis.securityHeaders.csp ? 'Presente' : 'Ausente'}\n`;
-        report += `*   **X-Frame-Options:** ${reportData.siteAnalysis.securityHeaders.xfo ? 'Presente' : 'Ausente'}\n`;
-        report += `*   **X-Content-Type-Options:** ${reportData.siteAnalysis.securityHeaders.xcto ? 'Presente' : 'Ausente'}\n\n`;
-    } else {
-        report += `*   **Status do Servidor:** Falha na conexão. ${reportData.siteAnalysis.error}\n\n`;
+        report += `*   **Content-Security-Policy (CSP):** ${technicalDetections.securityHeaders.csp ? 'Presente' : 'Ausente'}\n`;
+        report += `*   **X-Frame-Options (XFO):** ${technicalDetections.securityHeaders.xfo ? 'Presente' : 'Ausente'}\n`;
+        report += `*   **X-Content-Type-Options (XCTO):** ${technicalDetections.securityHeaders.xcto ? 'Presente' : 'Ausente'}\n\n`;
+        report += `*Nota: A ausência de cabeçalhos de segurança representa uma oportunidade de melhoria na postura defensiva do site e não indica, por si só, comportamento malicioso.*\n\n`;
     }
 
     report += `--- \n\n`;
-    report += `**ESCOPO DA ANÁLISE:**\nEste relatório é fruto de uma análise passiva de conectividade, configuração HTTPS, cabeçalhos HTTP e resposta do servidor. Nenhuma interação ativa, varredura de portas ou exploração de vulnerabilidades foi realizada.\n\n`;
+    report += `### ESCOPO DA ANÁLISE\n\n`;
+    report += `${scope.summary}\n\n`;
+    report += `**Limitações:**\n`;
+    scope.limitations.forEach(limitation => {
+        report += `*   ${limitation}\n`;
+    });
+    report += `\n`;
 
-    report += `**AVISO LEGAL:** Este relatório foi gerado pelo Zyntra Scan (https://zyntra-scan.onrender.com) e reflete os dados coletados de forma passiva no momento da análise. A avaliação de risco é baseada em heurísticas e não constitui um veredito final sobre a natureza do site. Este documento serve como um conjunto de evidências para apoiar uma decisão informada e pode ser usado como parte de uma denúncia formal a autoridades competentes.`;
+    report += `--- \n\n`;
+    report += `**AVISO LEGAL:**\nEste relatório foi gerado pelo Zyntra Scan (https://zyntra-scan.onrender.com) e reflete dados coletados de forma passiva no momento da análise. A avaliação de risco é baseada em heurísticas e não constitui veredito final sobre a natureza do site. Este documento serve como conjunto de evidências para apoiar decisões informadas e pode ser utilizado como parte de uma denúncia formal a autoridades competentes.`;
 
     return report;
   };

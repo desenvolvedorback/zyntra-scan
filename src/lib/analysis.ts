@@ -19,6 +19,18 @@ export type LinkAnalysisResult = {
   reasons: string[];
 };
 
+export const getImpactAndProbability = (riskLevel: 'Baixo' | 'Médio' | 'Alto') => {
+    switch (riskLevel) {
+        case 'Alto':
+            return { impact: "Alto", probability: "Alta" };
+        case 'Médio':
+            return { impact: "Médio", probability: "Média" };
+        case 'Baixo':
+        default:
+            return { impact: "Baixo", probability: "Baixa" };
+    }
+};
+
 const SUSPICIOUS_TLDS = ['.site', '.xyz', '.online', '.top', '.click', '.shop'];
 const PAID_TRAFFIC_PARAMS = ['utm_', 'ttclid', 'fbclid', 'adid', 'adset', 'placement', 'campaign'];
 const SUSPICIOUS_PATH_KEYWORDS = ['/of/', '/back/', '/promo/', '/confirmar/', '/pix/', '/resgatar/', '/ganhe/'];
@@ -113,12 +125,12 @@ export function analyzeLink(url: string, siteAnalysis: SiteAnalysisResult): Link
   
   // 4. Missing Security Headers from siteAnalysis
   if (!siteAnalysis.securityHeaders.xfo) {
-    reasons.push("Ausência do cabeçalho X-Frame-Options, aumentando o risco de ataques de clickjacking.");
-    score += 1;
+    // This is now just a minor factor, as its impact is contextualized elsewhere
+    score += 0.5;
   }
   if (!siteAnalysis.securityHeaders.xcto) {
-    reasons.push("Ausência do cabeçalho X-Content-Type-Options, o que pode permitir ataques de 'MIME sniffing'.");
-    score += 1;
+    // This is now just a minor factor, as its impact is contextualized elsewhere
+    score += 0.5;
   }
 
   // 5. Suspicious path keywords
@@ -137,7 +149,7 @@ export function analyzeLink(url: string, siteAnalysis: SiteAnalysisResult): Link
 
   if (!siteAnalysis.isHttps) {
     reasons.push("Conexão não segura (HTTP). Informações podem ser interceptadas.");
-    score += 2;
+    score += 3;
   }
 
   if (siteAnalysis.isSslValid === false) {
@@ -167,5 +179,8 @@ export function analyzeLink(url: string, siteAnalysis: SiteAnalysisResult): Link
       risk = 'Alto';
   }
 
-  return { risk, score, reasons };
+  // Round score to avoid decimals from header checks
+  const finalScore = Math.round(score);
+
+  return { risk, score: finalScore > 10 ? 10 : finalScore, reasons };
 }

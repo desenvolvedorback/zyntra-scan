@@ -4,25 +4,18 @@ import { ShieldCheck, Info } from "lucide-react";
 import { RiskIndicator } from "./RiskIndicator";
 
 interface LinkAnalysisCardProps {
-  result: LinkAnalysisResult;
-  risk: 'Baixo' | 'Médio' | 'Alto';
+    evaluation: {
+        riskLevel: 'Baixo' | 'Médio' | 'Alto';
+        potentialImpact: string;
+        riskProbability: string;
+        heuristicScore: number;
+    };
+    heuristic: {
+        riskFactors: string[];
+    }
 }
 
-export function LinkAnalysisCard({ result, risk }: LinkAnalysisCardProps) {
-    const getImpactAndProbability = (riskLevel: 'Baixo' | 'Médio' | 'Alto') => {
-        switch (riskLevel) {
-            case 'Alto':
-                return { impact: "Alto", probability: "Alta" };
-            case 'Médio':
-                return { impact: "Médio", probability: "Média" };
-            case 'Baixo':
-            default:
-                return { impact: "Baixo", probability: "Baixa" };
-        }
-    };
-    
-    const { impact, probability } = getImpactAndProbability(risk);
-
+export function LinkAnalysisCard({ evaluation, heuristic }: LinkAnalysisCardProps) {
   return (
     <Card className="h-full">
       <CardHeader>
@@ -35,28 +28,28 @@ export function LinkAnalysisCard({ result, risk }: LinkAnalysisCardProps) {
       <CardContent className="space-y-6">
         <div>
             <p className="text-sm font-semibold text-muted-foreground mb-2">Classificação de Risco</p>
-            <RiskIndicator risk={risk} size="lg" />
+            <RiskIndicator risk={evaluation.riskLevel} size="lg" />
         </div>
         <div className="grid grid-cols-2 gap-4 text-center">
             <div className="bg-muted/50 p-3 rounded-lg">
                 <p className="text-xs text-muted-foreground">Impacto Potencial</p>
-                <p className="font-semibold text-base">{impact}</p>
+                <p className="font-semibold text-base">{evaluation.potentialImpact}</p>
             </div>
              <div className="bg-muted/50 p-3 rounded-lg">
                 <p className="text-xs text-muted-foreground">Probabilidade de Risco</p>
-                <p className="font-semibold text-base">{probability}</p>
+                <p className="font-semibold text-base">{evaluation.riskProbability}</p>
             </div>
         </div>
         <div>
             <p className="text-sm font-semibold text-muted-foreground mb-2">Fatores de Risco Detectados</p>
-            {result.reasons.length === 0 || (result.reasons.length === 1 && risk === 'Baixo') ? (
+            {heuristic.riskFactors.length === 0 || (heuristic.riskFactors.length === 1 && heuristic.riskFactors[0].includes("Nenhum indicador")) ? (
                  <div className="flex items-start gap-3 text-sm text-muted-foreground p-3 rounded-lg bg-green-500/10">
                     <Info className="h-4 w-4 shrink-0 mt-0.5 text-green-500" />
                     <p>Nenhum indicador de risco significativo foi encontrado na análise heurística. A pontuação baixa sugere conformidade com as boas práticas básicas.</p>
                 </div>
             ) : (
                 <ul className="space-y-3">
-                {result.reasons.map((reason, index) => (
+                {heuristic.riskFactors.map((reason, index) => (
                     <li key={index} className="flex items-start gap-3 text-sm">
                     <div className="shrink-0 mt-0.5">
                         <Info className="h-4 w-4 text-amber-500" aria-hidden="true" />

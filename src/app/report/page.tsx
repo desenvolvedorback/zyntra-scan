@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowLeft, BookLock, BarChart3, Clock, FileText } from 'lucide-react';
-import { analyzeSite, analyzeLink, SiteAnalysisResult, LinkAnalysisResult } from '@/lib/analysis';
+import { analyzeSite, analyzeLink, SiteAnalysisResult, LinkAnalysisResult, getImpactAndProbability } from '@/lib/analysis';
 import { ReportSummary } from '@/components/report/ReportSummary';
 import { LinkAnalysisCard } from '@/components/report/LinkAnalysisCard';
 import { SiteAnalysisCard } from '@/components/report/SiteAnalysisCard';
@@ -15,24 +15,91 @@ export const metadata: Metadata = {
   title: 'Relatório de Análise - Zyntra Scan',
 };
 
+interface ApiReport {
+    meta: {
+        analysisId: string;
+        reportVersion: string;
+        analysisEngine: string;
+        analysisTimestamp: string;
+        targetUrl: string;
+    };
+    evaluation: {
+        riskLevel: 'Baixo' | 'Médio' | 'Alto';
+        potentialImpact: string;
+        riskProbability: string;
+        heuristicScore: number;
+        trustIndicator: string;
+        analysisHistory: string;
+    };
+    heuristicAnalysis: {
+        riskFactors: string[];
+    };
+    technicalDetections: SiteAnalysisResult & { isRedirected: boolean }; // Combining for simplicity
+    scope: {
+        summary: string;
+        limitations: string[];
+    };
+}
+
+
 interface ReportPageProps {
   searchParams: { [key: string]: string | string[] | undefined };
 }
 
 async function ReportGenerator({ url }: { url: string }) {
-  let siteAnalysisResult: SiteAnalysisResult;
-  let linkAnalysisResult: LinkAnalysisResult;
+  const now = new Date();
+  let reportData: ApiReport;
   let validationError: string | null = null;
-  let analysisDate: string = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
   
   try {
     new URL(url); 
-    siteAnalysisResult = await analyzeSite(url);
-    linkAnalysisResult = analyzeLink(url, siteAnalysisResult);
+    const siteAnalysisResult = await analyzeSite(url);
+    const linkAnalysisResult = analyzeLink(url, siteAnalysisResult);
+    const { impact, probability } = getImpactAndProbability(linkAnalysisResult.risk);
+
+    reportData = {
+        meta: {
+            analysisId: `ZS-${now.getTime()}`,
+            reportVersion: "1.0",
+            analysisEngine: "Zyntra Scan Engine v1.0 (Heurístico, Passivo)",
+            analysisTimestamp: now.toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' }),
+            targetUrl: url
+        },
+        evaluation: {
+            riskLevel: linkAnalysisResult.risk,
+            potentialImpact: impact,
+            riskProbability: probability,
+            heuristicScore: linkAnalysisResult.score,
+            trustIndicator: "Estável",
+            analysisHistory: "Não disponível para esta análise"
+        },
+        heuristicAnalysis: {
+            riskFactors: linkAnalysisResult.reasons
+        },
+        technicalDetections: {
+            ...siteAnalysisResult,
+            isRedirected: siteAnalysisResult.redirected,
+        },
+        scope: {
+            summary: "Análise passiva de conectividade, configuração HTTPS, cabeçalhos HTTP e resposta do servidor. Nenhuma interação ativa, exploração ou tentativa de intrusão foi realizada.",
+            limitations: [
+                "A análise reflete o estado do alvo no momento da coleta.",
+                "Resultados podem variar conforme alterações no ambiente do alvo.",
+                "A avaliação é heurística e não substitui auditorias completas."
+            ]
+        }
+    };
+
   } catch (e) {
     validationError = "A URL fornecida é inválida.";
-    siteAnalysisResult = { status: null, responseTime: null, isHttps: false, isSslValid: null, securityHeaders: { csp: false, xfo: false, xcto: false }, redirected: false, finalUrl: '', error: validationError };
-    linkAnalysisResult = { risk: 'Alto', score: 10, reasons: [validationError] };
+    // Create a dummy error report structure
+    reportData = {
+        meta: { analysisId: `ZS-${now.getTime()}`, reportVersion: "1.0", analysisEngine: "Zyntra Scan Engine v1.0", analysisTimestamp: now.toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' }), targetUrl: url },
+        evaluation: { riskLevel: 'Alto', potentialImpact: "Alto", riskProbability: "Alta", heuristicScore: 10, trustIndicator: 'Crítico', analysisHistory: 'Não disponível' },
+        heuristicAnalysis: { riskFactors: [validationError] },
+        technicalDetections: { status: null, responseTime: null, isHttps: false, isSslValid: null, securityHeaders: { csp: false, xfo: false, xcto: false }, redirected: false, finalUrl: '', error: validationError, isRedirected: false },
+        scope: { summary: '', limitations: [] }
+    }
   }
   
   if (validationError) {
@@ -47,33 +114,24 @@ async function ReportGenerator({ url }: { url: string }) {
         </Card>
       )
   }
-  
-  const reportData = {
-    url,
-    risk: linkAnalysisResult.risk,
-    score: linkAnalysisResult.score,
-    reasons: linkAnalysisResult.reasons,
-    siteAnalysis: siteAnalysisResult,
-  };
-
 
   return (
     <>
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <div>
           <p className="text-sm text-muted-foreground">
-            Relatório gerado em: {analysisDate} (Horário de Brasília)
+            Relatório gerado em: {reportData.meta.analysisTimestamp} (Horário de Brasília)
           </p>
-          <p className="text-xs text-muted-foreground">ID da Análise: ZS-{new Date().getTime()}</p>
+          <p className="text-xs text-muted-foreground">ID da Análise: {reportData.meta.analysisId}</p>
         </div>
         <ShareButton reportData={reportData} />
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-3">
-          <ReportSummary url={url} risk={linkAnalysisResult.risk} siteStatus={siteAnalysisResult.status} />
+          <ReportSummary url={reportData.meta.targetUrl} risk={reportData.evaluation.riskLevel} siteStatus={reportData.technicalDetections.status} />
         </div>
         <div className="lg:col-span-1 space-y-6">
-          <LinkAnalysisCard result={linkAnalysisResult} risk={linkAnalysisResult.risk} />
+          <LinkAnalysisCard evaluation={reportData.evaluation} heuristic={reportData.heuristicAnalysis} />
            <Card>
               <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-base">
@@ -82,7 +140,7 @@ async function ReportGenerator({ url }: { url: string }) {
                   </CardTitle>
               </CardHeader>
               <CardContent>
-                  <p className="font-semibold text-lg">Estável</p>
+                  <p className="font-semibold text-lg">{reportData.evaluation.trustIndicator}</p>
                   <p className="text-xs text-muted-foreground mt-1">Baseado em heurística e dados coletados no momento da análise.</p>
               </CardContent>
           </Card>
@@ -94,13 +152,13 @@ async function ReportGenerator({ url }: { url: string }) {
                   </CardTitle>
               </CardHeader>
               <CardContent>
-                   <p className="font-semibold text-lg">Não disponível</p>
+                   <p className="font-semibold text-lg">{reportData.evaluation.analysisHistory}</p>
                   <p className="text-xs text-muted-foreground mt-1">O monitoramento contínuo não está habilitado para esta URL.</p>
               </CardContent>
           </Card>
         </div>
         <div className="lg:col-span-2 space-y-6">
-          <SiteAnalysisCard result={siteAnalysisResult} />
+          <SiteAnalysisCard result={reportData.technicalDetections} />
            <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-3 text-lg">
@@ -110,7 +168,7 @@ async function ReportGenerator({ url }: { url: string }) {
               </CardHeader>
               <CardContent>
                   <p className="text-sm text-muted-foreground">
-                    Esta é uma análise passiva de conectividade, configuração HTTPS, cabeçalhos HTTP e resposta do servidor. Nenhuma interação ativa, varredura de portas ou exploração de vulnerabilidades foi realizada.
+                    {reportData.scope.summary}
                   </p>
               </CardContent>
             </Card>
