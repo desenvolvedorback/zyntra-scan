@@ -45,10 +45,10 @@ export function SiteAnalysisCard({ result }: SiteAnalysisCardProps) {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Server className="h-5 w-5" />
-          Análise do Site
+          Análise Técnica do Servidor
         </CardTitle>
         <CardDescription>
-          Detalhes técnicos da conexão com o servidor.
+          Dados brutos coletados a partir da conexão com o site.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-1">
@@ -91,12 +91,12 @@ export function SiteAnalysisCard({ result }: SiteAnalysisCardProps) {
         <AnalysisDetailRow 
           label="X-Frame-Options" 
           value={renderHeaderValue(result.securityHeaders.xfo)}
-          status={result.securityHeaders.xfo ? 'good' : 'bad'}
+          status={result.securityHeaders.xfo ? 'good' : 'neutral'}
         />
         <AnalysisDetailRow 
           label="X-Content-Type-Options" 
           value={renderHeaderValue(result.securityHeaders.xcto)}
-          status={result.securityHeaders.xcto ? 'good' : 'bad'}
+          status={result.securityHeaders.xcto ? 'good' : 'neutral'}
         />
       </CardContent>
     </Card>
