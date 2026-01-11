@@ -1,11 +1,25 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { SiteAnalysisResult } from "@/lib/analysis";
+import type { SiteAnalysisResult } from "@/lib/analysis";
 import { Server } from "lucide-react";
 import { AnalysisDetailRow } from "./AnalysisDetailRow";
 
 interface SiteAnalysisCardProps {
-  result: SiteAnalysisResult;
+    result: {
+        serverStatus: number | null;
+        responseTime: number | null;
+        isHttps: boolean;
+        isSslValid: boolean | null;
+        isRedirected: boolean;
+        finalUrl: string;
+        securityHeaders: {
+            csp: string | boolean;
+            xfo: string | boolean;
+            xcto: string | boolean;
+        };
+        error?: string;
+    };
 }
+
 
 function renderHeaderValue(value: string | boolean) {
     if (typeof value === 'boolean') {
@@ -53,8 +67,8 @@ export function SiteAnalysisCard({ result }: SiteAnalysisCardProps) {
       <CardContent className="space-y-1">
         <AnalysisDetailRow 
           label="Status HTTP" 
-          value={result.status ? `${result.status}` : 'N/A'}
-          status={result.status ? (result.status >= 200 && result.status < 400 ? 'good' : 'bad') : 'bad'}
+          value={result.serverStatus ? `${result.serverStatus}` : 'N/A'}
+          status={result.serverStatus ? (result.serverStatus >= 200 && result.serverStatus < 400 ? 'good' : 'bad') : 'bad'}
         />
         <AnalysisDetailRow 
           label="Tempo de Resposta" 
@@ -73,8 +87,8 @@ export function SiteAnalysisCard({ result }: SiteAnalysisCardProps) {
         />
         <AnalysisDetailRow 
           label="Houve Redirecionamento" 
-          value={result.redirected ? `Sim, para ${result.finalUrl}` : 'Não'}
-          status={result.redirected ? 'neutral' : 'good'}
+          value={result.isRedirected ? `Sim, para ${result.finalUrl}` : 'Não'}
+          status={result.isRedirected ? 'neutral' : 'good'}
         />
         <div className="px-1 pt-6 pb-2">
             <h3 className="text-md font-semibold">Cabeçalhos de Segurança HTTP</h3>
@@ -85,17 +99,17 @@ export function SiteAnalysisCard({ result }: SiteAnalysisCardProps) {
         <AnalysisDetailRow 
           label="Content-Security-Policy" 
           value={renderHeaderValue(result.securityHeaders.csp)}
-          status={result.securityHeaders.csp ? 'good' : 'info'}
+          status={!!result.securityHeaders.csp ? 'good' : 'info'}
         />
         <AnalysisDetailRow 
           label="X-Frame-Options" 
           value={renderHeaderValue(result.securityHeaders.xfo)}
-          status={result.securityHeaders.xfo ? 'good' : 'info'}
+          status={!!result.securityHeaders.xfo ? 'good' : 'info'}
         />
         <AnalysisDetailRow 
           label="X-Content-Type-Options" 
           value={renderHeaderValue(result.securityHeaders.xcto)}
-          status={result.securityHeaders.xcto ? 'good' : 'info'}
+          status={!!result.securityHeaders.xcto ? 'good' : 'info'}
         />
       </CardContent>
     </Card>
