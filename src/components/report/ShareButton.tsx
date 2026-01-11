@@ -19,12 +19,22 @@ export function ShareButton({ reportData }: ShareButtonProps) {
   const { toast } = useToast();
 
   const generateReportText = () => {
-    let report = `🚨 Relatório de Análise Zyntra Scan 🚨\n\n`;
-    report += `URL Analisada: ${reportData.url}\n`;
-    report += `Nível de Risco: ${reportData.risk} (Pontuação: ${reportData.score})\n\n`;
-    
+    const analysisId = `ZS-${new Date().getTime()}`;
+    const analysisDate = new Date().toUTCString();
+
+    let report = `**DOSSIÊ DE ANÁLISE ZYNTRA SCAN**\n\n`;
+    report += `--- \n\n`;
+    report += `**ID da Análise:** ${analysisId}\n`;
+    report += `**Data/Hora da Análise:** ${analysisDate}\n`;
+    report += `**URL Alvo:** ${reportData.url}\n\n`;
+
+    report += `**SUMÁRIO EXECUTIVO**\n`;
+    report += `- **Nível de Risco:** ${reportData.risk}\n`;
+    report += `- **Pontuação:** ${reportData.score}\n`;
+    report += `- **Conclusão:** Baseado em análise heurística e técnica, a URL apresenta risco ${reportData.risk.toLowerCase()}.\n\n`;
+
     if(reportData.risk !== 'Baixo') {
-        report += `🔍 Fatores de Risco Identificados:\n`;
+        report += `**EVIDÊNCIAS (HEURÍSTICA)**\n`;
         reportData.reasons.forEach(reason => {
             report += `- ${reason}\n`;
         });
@@ -32,15 +42,18 @@ export function ShareButton({ reportData }: ShareButtonProps) {
     }
 
     if(reportData.siteAnalysis.status) {
-        report += `ℹ️ Detalhes Técnicos:\n`
-        report += `- Status: ${reportData.siteAnalysis.status}\n`
-        report += `- HTTPS: ${reportData.siteAnalysis.isHttps ? 'Sim' : 'Não'}\n`
-        report += `- Redirecionamento: ${reportData.siteAnalysis.redirected ? 'Sim' : 'Não'}\n`;
+        report += `**EVIDÊNCIAS (TÉCNICA)**\n`;
+        report += `- Status do Servidor: ${reportData.siteAnalysis.status}\n`
+        report += `- Conexão Segura (HTTPS): ${reportData.siteAnalysis.isHttps ? 'Sim' : 'Não'}\n`;
+        report += `- Validade do Certificado SSL: ${reportData.siteAnalysis.isSslValid ? 'Válido' : 'Inválido ou Indeterminado'}\n`;
+        report += `- Redirecionamento: ${reportData.siteAnalysis.redirected ? `Sim, para ${reportData.siteAnalysis.finalUrl}` : 'Não'}\n`;
+        report += `- Cabeçalho CSP: ${reportData.siteAnalysis.securityHeaders.csp ? 'Presente' : 'Ausente'}\n`;
+        report += `- Cabeçalho XFO: ${reportData.siteAnalysis.securityHeaders.xfo ? 'Presente' : 'Ausente'}\n`;
+        report += `- Cabeçalho XCTO: ${reportData.siteAnalysis.securityHeaders.xcto ? 'Presente' : 'Ausente'}\n\n`;
     }
 
-    report += `\nPara uma análise detalhada, acesse o relatório completo:\n`;
-    report += `${window.location.href}\n\n`;
-    report += `Zyntra Scan — Analise links antes de clicar.`;
+    report += `--- \n\n`;
+    report += `**AVISO LEGAL:** Este relatório foi gerado pelo Zyntra Scan (https://zyntra-scan.onrender.com) e reflete os dados coletados de forma passiva no momento da análise. Não constitui um veredito final sobre a natureza do site, mas sim um conjunto de evidências para apoiar uma decisão informada.`;
 
     return report;
   };
@@ -50,13 +63,13 @@ export function ShareButton({ reportData }: ShareButtonProps) {
     try {
       await navigator.clipboard.writeText(reportText);
       toast({
-        title: "Relatório Copiado!",
-        description: "O resumo da análise foi copiado para a área de transferência.",
+        title: "Dossiê Copiado!",
+        description: "O dossiê de análise foi copiado para a área de transferência em formato Markdown.",
       });
     } catch (err) {
       toast({
         title: "Erro ao copiar",
-        description: "Não foi possível copiar o relatório. Tente novamente.",
+        description: "Não foi possível copiar o dossiê. Tente novamente.",
         variant: "destructive",
       });
     }
@@ -66,7 +79,7 @@ export function ShareButton({ reportData }: ShareButtonProps) {
     <div className="flex justify-end">
       <Button onClick={handleShare} variant="outline">
         <Share2 className="mr-2 h-4 w-4" />
-        Compartilhar Análise
+        Exportar Dossiê para Denúncia
       </Button>
     </div>
   );
